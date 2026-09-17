@@ -1,0 +1,5 @@
+schemaVersion: treeseed.proposal-type/v1
+id: implementation
+label: Implementation
+description: A bounded implementation of an accepted API project change, with independent review and exact-source verification.
+defaultPriority: normal
