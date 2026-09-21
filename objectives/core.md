@@ -1,15 +1,10 @@
 ---
-id: objective:api-core
-title: TreeSeed API Core Objective
-description: TreeSeed API should operate the Treeseed backend control plane, HTTP API, PostgreSQL-backed state, backend auth, operations runner, migrations, seed application, route descriptors, provider sessions, assignment leases, mode-run persistence, capacity ledger settlement, and public TreeDX federation hosting.
-date: 2026-06-22
-summary: TreeSeed API exists to operate the Treeseed backend control plane, HTTP API, PostgreSQL-backed state, backend auth, operations runner, migrations, seed application, route descriptors, provider sessions, assignment leases, mode-run persistence, capacity ledger settlement, and public TreeDX federation hosting while preserving its package boundary.
-status: live
-timeHorizon: long-term
-motivation: Package-local workdays need a stable north star from the README so humans and agents can plan, execute, review, and report work without drifting across package ownership boundaries.
-primaryContributor: api-steward
-relatedQuestions: []
-relatedBooks: []
+schemaVersion: treeseed.objective/v1
+id: api-core
+projectId: api
+title: "TreeSeed API Core Objective"
+outcome: "TreeSeed API exists to operate the Treeseed backend control plane, HTTP API, PostgreSQL-backed state, backend auth, operations runner, migrations, seed application, route descriptors, provider sessions, assignment leases, mode-run persistence, capacity ledger settlement, and public TreeDX federation hosting while preserving its package boundary."
+status: active
 ---
 
 TreeSeed API exists to operate the Treeseed backend control plane, HTTP API, PostgreSQL-backed state, backend auth, operations runner, migrations, seed application, route descriptors, provider sessions, assignment leases, mode-run persistence, capacity ledger settlement, and public TreeDX federation hosting.
