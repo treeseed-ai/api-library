@@ -1,0 +1,296 @@
+---
+schemaVersion: treeseed.proposal/v1
+id: golden-api-content-derived-acting-promotion
+projectId: b371c2ba-c9f3-41f0-b249-eb084ef9e610
+title: Project accepted decisions directly into living-graph work
+request: Resolve SDK-owned decision identities against current accepted proposal
+  authority, exact project scope, estimates, source refs, profiles, and
+  conditions; reconcile affected content directly into the living graph and
+  admit ready nodes during an active workday. Reject caller-authored graph,
+  assignment, source, role, execution-input, demand, or capacity-plan state, and
+  delete the superseded promotion path.
+summary: Prove the API turns governed content into assignments without a second
+  plan or scheduling authority.
+status: draft
+objectiveRefs:
+  - commit: 7d5d6bff4c9d3599b9a20fa9d4e2429550f58242
+    id: core
+    model: objective
+    path: objectives/core.md
+    repository: treeseed-ai/api-library
+    store: treedx
+evidenceRefs:
+  - id: api-source-1
+    model: issue
+    store: url
+    url: https://github.com/treeseed-ai/api/issues/356
+executionPlan:
+  workItems:
+    - acceptanceCriteria:
+        - Trace proposal decision resolution, reconciliation, admission,
+          retries, and legacy promotion/storage paths with exact refs.
+        - Return an exact TreeDX note or knowledge reference containing
+          inspected source evidence, duplication/deletion boundaries, and
+          unresolved questions. Cite the frozen repository commit and inspected
+          paths. This research result is not required to prove subsequent
+          implementation.
+      activity: acting
+      agentClass: researcher
+      contextRefs:
+        - commit: 7d5d6bff4c9d3599b9a20fa9d4e2429550f58242
+          id: api-library
+          model: repository
+          path: .
+          repository: treeseed-ai/api-library
+          store: treedx
+      dependsOn: []
+      id: research-context
+      maximumReviewCycles: 2
+      objective: Trace proposal decision resolution, reconciliation, admission,
+        retries, and legacy promotion/storage paths with exact refs.
+      requestedPermissions:
+        content:
+          read:
+            - book
+            - knowledge
+            - objective
+            - proposal
+            - decision
+            - note
+            - question
+          write:
+            - knowledge
+            - note
+            - question
+        tools:
+          - discussion
+          - source.read
+      requiredCapabilities:
+        - treeseed.research.repository
+      review: required
+      workspace: treedx
+    - acceptanceCriteria:
+        - Record the transaction and authority boundaries from accepted content
+          through graph revision, assignment, reservation, result, and
+          settlement.
+        - Return exact project Architecture book or knowledge references
+          describing the smallest design, portable shape, ownership boundaries,
+          and retired competing contracts. Review this design against its stated
+          objective, not as completed downstream implementation.
+      activity: acting
+      agentClass: architect
+      contextRefs:
+        - commit: 7d5d6bff4c9d3599b9a20fa9d4e2429550f58242
+          id: api-library
+          model: repository
+          path: .
+          repository: treeseed-ai/api-library
+          store: treedx
+      dependsOn: []
+      id: architecture-contract
+      maximumReviewCycles: 2
+      objective: Record the transaction and authority boundaries from accepted content
+        through graph revision, assignment, reservation, result, and settlement.
+      requestedPermissions:
+        content:
+          read:
+            - book
+            - knowledge
+            - objective
+            - proposal
+            - decision
+            - note
+            - question
+          write:
+            - book
+            - knowledge
+            - note
+            - question
+        tools:
+          - discussion
+          - source.read
+      requiredCapabilities:
+        - treeseed.engineering.architecture
+      review: required
+      workspace: treedx
+    - acceptanceCriteria:
+        - Add positive, stale, wrong-team, wrong-project, unaccepted,
+          superseded, missing-estimate/profile/source, replay, and
+          mid-workday-admission tests.
+        - Return a clean Git commit containing the requested test-first cases
+          before Engineer implementation. Demonstrate that the intended tests
+          fail on the frozen source for the expected reason; retain exact
+          command, exit status, duration, and output digest. Specify the
+          expected corrected outcomes. Do not implement the production fix or
+          claim failing tests passed.
+      activity: acting
+      agentClass: tester
+      contextRefs:
+        - commit: 06670213b1f2d728b58d9fb87ec27c65d6191682
+          id: api
+          model: repository
+          repository: treeseed-ai/api
+          store: git
+      dependsOn:
+        - research-context
+        - architecture-contract
+      id: tests-first
+      maximumReviewCycles: 2
+      objective: Add positive, stale, wrong-team, wrong-project, unaccepted,
+        superseded, missing-estimate/profile/source, replay, and
+        mid-workday-admission tests.
+      requestedPermissions:
+        content:
+          read:
+            - book
+            - knowledge
+            - objective
+            - proposal
+            - decision
+            - note
+            - question
+          write: []
+        tools:
+          - source.read
+          - source.write
+          - verification
+      requiredCapabilities:
+        - treeseed.engineering.unit-testing
+      review: required
+      workspace: git
+    - acceptanceCriteria:
+        - Implement direct content-derived reconciliation/admission and remove
+          capacity-plan, execution-input, demand-row, and alternate synthesis
+          behavior.
+        - Start from the exact approved Tester candidate. Implement the stated
+          change so those tests pass; do not replace the Tester cases or add
+          substitute tests unless requested by the Tester result. Return a clean
+          Git commit with exact passing verification records and deleted
+          superseded paths.
+      activity: acting
+      agentClass: engineer
+      contextRefs:
+        - commit: 06670213b1f2d728b58d9fb87ec27c65d6191682
+          id: api
+          model: repository
+          repository: treeseed-ai/api
+          store: git
+      dependsOn:
+        - tests-first
+      id: implement-change
+      maximumReviewCycles: 2
+      objective: Implement direct content-derived reconciliation/admission and remove
+        capacity-plan, execution-input, demand-row, and alternate synthesis
+        behavior.
+      requestedPermissions:
+        content:
+          read:
+            - book
+            - knowledge
+            - objective
+            - proposal
+            - decision
+            - note
+            - question
+          write: []
+        tools:
+          - source.read
+          - source.write
+          - verification
+      requiredCapabilities:
+        - treeseed.engineering.code-change
+      review: required
+      workspace: git
+    - acceptanceCriteria:
+        - Document public API behavior, failure explanations, watch/readback
+          fields, and the absence of caller-authored internals.
+        - Start from the exact approved implementation and test chain. Update
+          the actual repository documentation and examples for the stated
+          objective; return a clean Git commit. Describe verified behavior
+          accurately and do not claim unrelated future acceptance.
+      activity: acting
+      agentClass: technical-writer
+      contextRefs:
+        - commit: 06670213b1f2d728b58d9fb87ec27c65d6191682
+          id: api
+          model: repository
+          repository: treeseed-ai/api
+          store: git
+      dependsOn:
+        - tests-first
+        - implement-change
+      id: document-change
+      maximumReviewCycles: 2
+      objective: Document public API behavior, failure explanations, watch/readback
+        fields, and the absence of caller-authored internals.
+      requestedPermissions:
+        content:
+          read:
+            - book
+            - knowledge
+            - objective
+            - proposal
+            - decision
+            - note
+            - question
+          write: []
+        tools:
+          - source.read
+          - source.write
+          - verification
+      requiredCapabilities:
+        - treeseed.publishing.documentation
+      review: required
+      workspace: git
+    - acceptanceCriteria:
+        - Run database migration from a clean pre-launch schema, API/runner
+          builds and tests, local service smoke, replay-as-noop, and rollback
+          simulation.
+        - Combine only the exact approved Git predecessor chain in the
+          campaign-local simulation repository. Run project verification and
+          package/release dry runs, inspect local artifacts and exports, and
+          return a local integration commit with artifact digests and optional
+          unpushed local tag. Do not publish, push upstream, deploy, rotate
+          credentials, or mutate live data.
+        - "Final project acceptance: one exact accepted proposal revision
+          creates one deterministic connected component; replay is noop; content
+          accepted mid-workday becomes eligible without restart; transactional
+          claim creates one assignment/lease/reservation; each attempt settles
+          once; no legacy records are read or written."
+      activity: acting
+      agentClass: releaser
+      contextRefs:
+        - commit: 06670213b1f2d728b58d9fb87ec27c65d6191682
+          id: api
+          model: repository
+          repository: treeseed-ai/api
+          store: git
+      dependsOn:
+        - implement-change
+        - document-change
+      id: simulate-release
+      maximumReviewCycles: 2
+      objective: Run database migration from a clean pre-launch schema, API/runner
+        builds and tests, local service smoke, replay-as-noop, and rollback
+        simulation.
+      requestedPermissions:
+        content:
+          read:
+            - book
+            - knowledge
+            - objective
+            - proposal
+            - decision
+            - note
+            - question
+          write: []
+        tools:
+          - source.read
+          - source.write
+          - verification
+          - release
+      requiredCapabilities:
+        - treeseed.engineering.release
+      review: required
+      workspace: git
+---
