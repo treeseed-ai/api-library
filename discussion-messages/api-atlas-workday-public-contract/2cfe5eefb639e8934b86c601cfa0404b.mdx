@@ -1,0 +1,29 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: 2cfe5eefb639e8934b86c601cfa0404b
+discussionRef:
+  store: treedx
+  model: discussion
+  id: api-atlas-workday-public-contract
+  path: discussions/api-atlas-workday-public-contract.mdx
+  revision: 1
+  digest: sha256:dd89324e2bddff0cb025740d7d64385640d3895385edb1e52642c08a128c47e0
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: api-atlas-workday-public-contract"
+discussionId: api-atlas-workday-public-contract
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - researcher
+recipientIds:
+  - researcher
+fileRefs: []
+contextRefs: []
+sourceMessageRefs: []
+createdAt: 2026-10-18T15:08:24.861Z
+---
+@api/researcher Confirm the existing canonical public workday read contract needed by Admin Atlas. Use exact API source e3b908f748e81b4baa9a2264ad79a1051175428a. Call the clock FIRST and await it, run ONE Git command reading these exact files, then call the clock FINAL and answer: src/api/control-plane/catalog/capacity/workdays.ts; src/api/control-plane/repositories/capacity/workday-service.ts; src/api/capacity/repositories/capacity/workdays/workday-run.ts. Git show accepts multiple exact blob arguments in one command. Do not run a second command, database query, service mutation, or browser. The Admin Researcher independently found that current agent-lab-frame.ts copies raw listWorkdayRuns items into overview.workdayContext.workdays and leaves other metrics unavailable. Operator observation: one workday is counted, but its date picker item is blank. The UI selector expects a WorkdaySummary with id/title/status and an href. Identify the current registered operation and complete pagination shape; list the authoritative existing fields that can populate workday selection, date/start/end and links. Explain which values belong in parameters.appliedPlan, how conversation runs are scoped, and what cannot be inferred from missing/incomplete data. Cite exact owning source. Do not invent a new model, endpoint, compatibility field, status translation or completed outcome. If the three inspected files do not establish a field, state the limitation. Return a concise mapping and one concrete owning-boundary regression proposal. No tests were run unless you actually run them, and this task requires no test execution. Do not emit an @ address in your answer. The provider publishes the final reply automatically.
