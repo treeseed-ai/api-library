@@ -1,0 +1,159 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: 2f9124790940b712d517a0dd28bbd084
+discussionRef:
+  store: treedx
+  model: discussion
+  id: api-book-body-test-corrected-file
+  path: discussions/api-book-body-test-corrected-file.mdx
+  revision: 1
+  digest: sha256:38c03d84a71deb63b91275a22a8c7ff78ccab52d94c7c41f00b61cf20dd3d01b
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: api-book-body-test-corrected-file"
+discussionId: api-book-body-test-corrected-file
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - tester
+recipientIds:
+  - tester
+fileRefs: []
+contextRefs: []
+sourceMessageRefs: []
+createdAt: 2026-10-19T02:38:12.606Z
+---
+@api/tester Correct your actual test proposal for API573 using the independent negative review below. Return the COMPLETE executable updated book-repin.test.ts in one TypeScript block, retaining the two original cases unchanged and fixing EVERY listed issue together. Do not include an implementation fix, adaptation TODOs, undeclared helpers, or claims of tests run. Inspect with at most ONE bounded shell command after the initial authoritative clock if needed; use the supplied source rather than rediscovery. Clock before that command and final after all tools, then response. Preserve the original deadline.
+
+Batch corrections: explicit supported Node imports and stdin handling (execFileSync accepts input, or write a patch file for git apply); no unsafe-paths; a genuinely valid currentv3 Book fixture with projectId/revision/required metadata; compare exact resulting body bytes plus specific API-owned metadata instead of whole-file equality; actual emitted patch must apply successfully in an owned temporary directory, cleanup finally. The current canonical managedTeamLibrarySeedFiles fixture can supply valid v3 metadata; construct the legacy variant by retiring the version/identity fields, not by making the current case invalid. Reuse existing parser/serializer utilities instead of reimplementing production diff logic. Do not add a compatibility model or accept arbitrary caller identity. Explain expected intended body-loss RED only; compilation, command, fixture or expectation failures do not count.
+
+Do NOT include a delivery/publication-status footer: the handler publishes your normal response AFTER the model turn, outside your visibility. The original review actually exists canonically; its model footer claiming it was not posted is a pre-handler assumption, not evidence of failed publication. Report only what you personally inspected or ran; no tests or writes are requested. The integrator separately verifies actual artifact and cleanup.
+
+INDEPENDENT REVIEW AUTHORITY: {"kind": "treedx", "projectId": "b371c2ba-c9f3-41f0-b249-eb084ef9e610", "repository": "repo_be2b46a14c729f0e", "commit": "dead7968ab2e899ded0c297dd1c4107b1108a934", "path": "discussion-messages/api-book-body-test-independent-review/response-ef821b22275159af1dd8b1f5.mdx", "workspaceId": "ws_frh4VosDJYmWC7FSE1lZRiy87rZwPb_U"}; complete file SHA256 53ec1be870bfb3b50885690b6c4afa3351faa1456659a11c238f1b7391c632cb
+INDEPENDENT REVIEW (verbatim substantive findings; its pre-handler publication-status footer is retained in the original artifact, not copied as a current fact):
+**REJECT.** The proposal retains both original cases, but the added body-preservation case is not a complete executable regression, and its whole-file expectation does not match API-owned Book metadata.
+
+Observed gaps and corrections:
+
+- `mkdtemp`, `join`, `tmpdirPath`, `mkdir`, `dirname`, `writeFile`, `readFile`, `rm`, and `execFileAsync` are undeclared. Import the needed Node filesystem/path/os helpers and define a supported promisified `execFile` helper.
+- Node’s `execFile` does not feed stdin from an `input` option. Supply the patch through a supported stdin mechanism, such as `execFile` with a piped writable stream, or write the patch to a temporary file and pass that file to `git apply`.
+- The `currentv3` fixture is not genuinely current: it lacks `projectId` and `revision`. Give it valid current-v3 authority fields and preserve them in the expected result.
+- Whole-file byte equality assumes only four frontmatter changes. The API may generate metadata/defaults and remove retired fields, so construct the expected frontmatter from the actual API contract or assert the relevant API-owned fields separately. Keep the body-byte assertion against the extracted resulting Markdown body.
+- `--unsafe-paths` is unnecessary for this fixed disposable relative path. Omit it and keep the temporary directory bounded with `finally` cleanup.
+- `extracted` is checked for definition but never used to ensure the intended Git patch is applied. The test must apply the actual patch successfully and assert the resulting Book file and body bytes.
+
+I inspected the required frozen source at `adebc9caef11d4347f7d69014631616379c12f4f`; it contains the two retained cases. I did not run tests or claim compilation or native TreeDX/PostgreSQL proof.
+
+
+
+EXACT PREVIOUS TEST FILE FOR CORRECTION:
+import { describe,expect,it,vi } from 'vitest';
+import { createKnowledgeWorkspaceService } from '../../../../../src/api/control-plane/knowledge/knowledge-workspace-service.ts';
+import { managedTeamLibrarySeedFiles } from '../../../../../src/api/teams/managed-team-library-service.ts';
+import { resolveKnowledgeGatewayConnection } from '../../../../../src/api/knowledge/gateway-treedx-connection.ts';
+
+vi.mock('../../../../../src/api/knowledge/gateway-treedx-connection.ts',async(original)=>({
+	...await original<typeof import('../../../../../src/api/knowledge/gateway-treedx-connection.ts')>(),
+	resolveKnowledgeGatewayConnection:vi.fn(),
+}));
+
+describe('Book revision custody',()=>{
+	it('replaces an invalid historical Book without validating the retired source shape',async()=>{
+		const workspace={id:'draft-legacy',projectId:'project',actorUserId:'author',status:'draft',version:1,
+			treeDxWorkspaceId:'remote',baseCommitSha:'a'.repeat(40),baseRef:'staging',
+			branchName:'refs/heads/knowledge/draft-legacy',allowedPaths:['books/**','knowledge/**']};
+		const source='---\nschemaVersion: treeseed.book/v2\nid: core\nslug: core\ntitle: Core\nsummary: Legacy book\nstatus: published\nvisibility: team\norder: 0\ntopics: []\n---\n';
+		const client={readFile:vi.fn(async()=>({sha:'old-sha',content:source})),
+			listRepositoryPaths:vi.fn(async()=>({resolvedRef:'a'.repeat(40),entries:[],page:{hasMore:false}})),
+			status:vi.fn(async()=>({changes:[]})),applyChangeset:vi.fn(async()=>({applied:true}))};
+		vi.mocked(resolveKnowledgeGatewayConnection).mockResolvedValue({client,contentPath:'.',repositoryId:'repo-1'} as never);
+		const store={getKnowledgeWorkspace:vi.fn(async()=>workspace),
+			getProjectDetails:vi.fn(async()=>({project:{id:'project',teamId:'team'}})),
+			principalCanAccessTeam:vi.fn(async()=>true),
+			getTeamAccessSummary:vi.fn(async()=>({permissions:['knowledge:author']})),
+			updateKnowledgeWorkspace:vi.fn(async()=>({ok:true,workspace:{...workspace,version:2}})),
+			recordAuditEvent:vi.fn(async()=>undefined)};
+		const service=createKnowledgeWorkspaceService(store,{projectCatalog:vi.fn(async()=>({books:[],pages:[]}))});
+		await service.updateContent({id:'author'},workspace.id,{kind:'book',version:1,sourcePath:'books/core.md',
+			id:'core',slug:'core',title:'Core',summary:'Governed book',visibility:'team',order:0});
+		expect(client.applyChangeset.mock.calls[0]?.[0]?.patch).toContain('treeseed.book/v3');
+	});
+	it('repins every existing page in the same governed changeset as its Book update',async()=>{
+		const seed=managedTeamLibrarySeedFiles('project');
+		const bookPath='books/team-operations.md';
+		const pagePath='knowledge/team-operations/communication-standards.md';
+		const workspace={id:'draft-1',projectId:'project',actorUserId:'author',status:'draft',version:1,
+			treeDxWorkspaceId:'remote',baseCommitSha:'a'.repeat(40),baseRef:'staging',
+			branchName:'refs/heads/knowledge/draft-1',allowedPaths:['books/**','knowledge/**']};
+		const client={
+			readFile:vi.fn(async({path}:{path:string})=>({sha:'existing-sha',content:seed[path]})),
+			listRepositoryPaths:vi.fn(async()=>({resolvedRef:'a'.repeat(40),entries:[{path:bookPath},{path:pagePath}],page:{hasMore:false}})),
+			status:vi.fn(async()=>({changes:[]})),
+			applyChangeset:vi.fn(async(_input:{patch:string})=>({applied:true})),
+		};
+		vi.mocked(resolveKnowledgeGatewayConnection).mockResolvedValue({client,contentPath:'.',repositoryId:'repo-1'} as never);
+		const store={
+			getKnowledgeWorkspace:vi.fn(async()=>workspace),
+			getProjectDetails:vi.fn(async()=>({project:{id:'project',teamId:'team'}})),
+			principalCanAccessTeam:vi.fn(async()=>true),
+			getTeamAccessSummary:vi.fn(async()=>({permissions:['knowledge:author']})),
+			updateKnowledgeWorkspace:vi.fn(async()=>({ok:true,workspace:{...workspace,version:2}})),
+			recordAuditEvent:vi.fn(async()=>undefined),
+		};
+		const service=createKnowledgeWorkspaceService(store,{projectCatalog:vi.fn(async()=>({books:[],pages:[]}))});
+		await service.updateContent({id:'author'},workspace.id,{kind:'book',version:1,sourcePath:bookPath,
+			id:'team-operations',slug:'team-operations',title:'Team Operations',summary:'Updated team standards.',
+			visibility:'team',order:0});
+		const patch=client.applyChangeset.mock.calls[0]?.[0]?.patch ?? '';
+		expect(patch).toContain(bookPath);
+		expect(patch).toContain(pagePath);
+		expect(patch).toContain('revision: 2');
+	});
+	it.each([
+		['legacyv2','treeseed.book/v2'],
+		['currentv3','treeseed.book/v3'],
+	])('preserves exact Markdown body bytes for a metadata update of a %s Book',async(_label,schemaVersion)=>{
+		const body='Distinctive body — naïve café 雪.\nLine with trailing spaces.  \n\nFinal paragraph Ω.\n';
+		const source=`---\nschemaVersion: ${schemaVersion}\nid: core\nslug: core\ntitle: Core\nsummary: Existing book\nstatus: published\nvisibility: team\norder: 0\ntopics: []\n---\n${body}`;
+		const workspace={id:'draft-body',projectId:'workspace-project',actorUserId:'author',status:'draft',version:1,
+			treeDxWorkspaceId:'remote',baseCommitSha:'a'.repeat(40),baseRef:'staging',
+			branchName:'refs/heads/knowledge/draft-body',allowedPaths:['books/**','knowledge/**']};
+		const client={readFile:vi.fn(async()=>({sha:'old-sha',content:source})),
+			listRepositoryPaths:vi.fn(async()=>({resolvedRef:'a'.repeat(40),entries:[],page:{hasMore:false}})),
+			status:vi.fn(async()=>({changes:[]})),applyChangeset:vi.fn(async(_input:{patch:string})=>({applied:true}))};
+		vi.mocked(resolveKnowledgeGatewayConnection).mockResolvedValue({client,contentPath:'.',repositoryId:'repo-1'} as never);
+		const store={getKnowledgeWorkspace:vi.fn(async()=>workspace),
+			getProjectDetails:vi.fn(async()=>({project:{id:'workspace-project',teamId:'team'}})),
+			principalCanAccessTeam:vi.fn(async()=>true),
+			getTeamAccessSummary:vi.fn(async()=>({permissions:['knowledge:author']})),
+			updateKnowledgeWorkspace:vi.fn(async()=>({ok:true,workspace:{...workspace,version:2}})),
+			recordAuditEvent:vi.fn(async()=>undefined)};
+		const service=createKnowledgeWorkspaceService(store,{projectCatalog:vi.fn(async()=>({books:[],pages:[]}))});
+		await service.updateContent({id:'author'},workspace.id,{kind:'book',version:1,sourcePath:'books/core.md',
+			id:'core',slug:'core',title:'Updated Core',summary:'Updated summary',visibility:'team',order:1});
+		const patch=client.applyChangeset.mock.calls[0]?.[0]?.patch ?? '';
+		const extracted=patch.split('diff --git ')[1];
+		expect(extracted).toBeDefined();
+		const tmpdir=await mkdtemp(join(tmpdirPath(),'book-body-'));
+		try{
+			const filePath=join(tmpdir,'books/core.md');
+			await mkdir(dirname(filePath),{recursive:true});
+			await writeFile(filePath,source);
+			await execFileAsync('git',['apply','--unsafe-paths','-'],{cwd:tmpdir,input:patch});
+			const resulting=await readFile(filePath);
+			expect(resulting.equals(Buffer.from(source.replace(/^schemaVersion: treeseed\.book\/v[23]$/mu,'schemaVersion: treeseed.book/v3')
+				.replace(/^title: Core$/mu,'title: Updated Core')
+				.replace(/^summary: Existing book$/mu,'summary: Updated summary')
+				.replace(/^order: 0$/mu,'order: 1')))).toBe(true);
+			expect(resulting.subarray(resulting.indexOf(Buffer.from('\n---\n'))+5).equals(Buffer.from(body))).toBe(true);
+		}finally{
+			await rm(tmpdir,{recursive:true,force:true});
+		}
+	});
+});
+
+
+Held project Git sourceadebc9caef11d4347f7d69014631616379c12f4f. Existing managedTeamLibrarySeedFiles(workspace.projectId) returns a valid books/team-operations.md v3 fixture, as already used in the retained original test. Use complete actual current metadata for the current case; legacy may deliberately omit current version/identity fields. No source/metadata-model or implementation repair is requested. The task is a COMPLETE executable test-only file, with exact resulting-body bytes and specific API-owned metadata assertions. Omit unsupported post-turn publication-status claims; actual handler receipts determine publication.
