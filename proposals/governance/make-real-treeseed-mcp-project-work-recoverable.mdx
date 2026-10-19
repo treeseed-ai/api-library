@@ -14,15 +14,18 @@ request: "Repair TreeSeed API MCP mutations so an external coordinator can send
   isolation. Participant execution estimates remain absent. Prior research-only
   prose estimates are retained in the discussion and do not grant acting
   authority. Review the integrator candidate in API PR581 before approval;
-  complete native verification and actual MCP recovery remain pending. API
-  source authority is treeseed-ai/api at
-  4f4130e6d7198cb2be45d22755ed3d4db410efdb; original design base
-  19f98bfaf0707cb9a0a97a4d763de0073eaf2f3a is retained in proposal v1. No
-  production publication or alternate scheduler is authorized. A real same-key
-  SDK replay succeeded while proposal v1 was unchanged, but after version 2 it
-  returned discussion_invocation_idempotency_conflict. Retain the original
-  task/result and fix derived live-context drift before claiming durable
-  workflow recovery. No simulated release is proved."
+  complete native verification and actual MCP recovery remain pending. Proposed
+  API candidate citation is treeseed-ai/api at
+  d50ba3320d7e345c761ded92d94a58cf3115238b. This citation does not change a chat
+  sandbox checkout grant. Implementation files are byte-identical to
+  independently supplied diff head 4f4130e6d7198cb2be45d22755ed3d4db410efdb; the
+  final commit adds native tests of the review claims. The original design base
+  is retained in proposal v1. No production publication or alternate scheduler
+  is authorized. A real same-key SDK replay succeeded while proposal v1 was
+  unchanged, but after version 2 it returned
+  discussion_invocation_idempotency_conflict. Retain the original task/result
+  and fix derived live-context drift before claiming durable workflow recovery.
+  No simulated release is proved."
 summary: Enable reliable coordinator-directed project work through the same
   governed API backend used by SDK and CLI.
 status: discussing
@@ -38,7 +41,7 @@ evidenceRefs:
     model: repository
     id: treeseed-ai/api
     repository: treeseed-ai/api
-    commit: 4f4130e6d7198cb2be45d22755ed3d4db410efdb
+    commit: d50ba3320d7e345c761ded92d94a58cf3115238b
   - store: url
     model: issue
     id: sdk-429
