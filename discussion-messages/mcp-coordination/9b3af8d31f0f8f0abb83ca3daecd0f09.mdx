@@ -1,0 +1,35 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: 9b3af8d31f0f8f0abb83ca3daecd0f09
+discussionRef:
+  store: treedx
+  model: discussion
+  id: mcp-coordination
+  path: discussions/mcp-coordination.mdx
+  revision: 1
+  digest: sha256:b0b531444af946bfdcd2627752294f29cebb1d9d84be00fe8c466d4d7a6489bd
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: mcp-coordination"
+discussionId: mcp-coordination
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - researcher
+recipientIds:
+  - researcher
+fileRefs: []
+contextRefs:
+  - kind: proposal
+    id: 46a2982b-7427-4ef0-8583-c5f4843063aa
+    projectId: b371c2ba-c9f3-41f0-b249-eb084ef9e610
+    immutableRef: afb84153c10440bd4fbf94a4aa8383fa4edd5205
+    path: proposals/governance/make-real-treeseed-mcp-project-work-recoverable.mdx
+    digest: sha256:190d066522aabe9443d96148aa1a0d633f174410514c1703b3b0f973a083e866
+sourceMessageRefs: []
+createdAt: 2026-10-19T15:44:57.388Z
+---
+@api/researcher Continue the real open API MCP proposal using the newly published chat profile. Earlier attempt failed its per-command clock gate; do not count its prose as a result. Research this smallest useful scope: at API source 19f98bfaf0707cb9a0a97a4d763de0073eaf2f3a read only src/api/control-plane/mcp/create-mcp-handler.ts and src/api/control-plane/http/operation-http-handler.ts in one bounded source command, with a clock immediately before it. Explain the exact existing boundary for Idempotency-Key and If-Match propagation and give your genuine estimate for that scoped change and verification. Supplied fact, not your independent source evidence: the installed native MCP SDK exposes the original Request as requestContext.requestInfo. Recommend one realistic follow-up assertion for retrying communications.send after a dropped response. Stay within 180 words, distinguish supplied and read evidence, final clock then substantive reply. Do not run tests, search guessed paths, inspect dependencies, alter code, publish, or invent other participants estimates. Reserve the existing closeout window. This is proposal planning to advance real software, not formal acceptance.
