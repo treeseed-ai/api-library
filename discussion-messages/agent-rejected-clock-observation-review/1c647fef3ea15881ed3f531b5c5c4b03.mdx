@@ -1,0 +1,76 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: 1c647fef3ea15881ed3f531b5c5c4b03
+discussionRef:
+  store: treedx
+  model: discussion
+  id: agent-rejected-clock-observation-review
+  path: discussions/agent-rejected-clock-observation-review.mdx
+  revision: 1
+  digest: sha256:d3f81eca919a80ec56fbe5e7c40d9eaa4d719b4ba691c6adfeadaa44943430c9
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: agent-rejected-clock-observation-review"
+discussionId: agent-rejected-clock-observation-review
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - reviewer
+recipientIds:
+  - reviewer
+fileRefs: []
+contextRefs: []
+sourceMessageRefs: []
+createdAt: 2026-10-19T00:51:11.868Z
+---
+@api/reviewer Independently review the API-facing protected-observation safety of Agent candidate 63016e57f8329ee29f09ae69827afda94db5dad2 (tree dc7ed05f4d915be31f6a628c0561e42b6ab6591c), frozen BASE af5f3e1ffbf4e15e7ec8e36ca3af5b95220b1887. Ordinary read-only coached source review, not formal acceptance. Respect original clocks and deadline; reply normally and the configured handler publishes your response. Do not claim test execution or repository access you did not perform.
+
+A real Admin Researcher assignment__i27nz0a2Rf64SjJpiu2SaKdq7qIQ4Go failed with Completed sandbox result lacks valid timing-awareness evidence. Its original rejected receipt/events disappeared before the failed observation. One35-second measured settlement and exact cleanup were independently verified; no artifact or success is credited. We must preserve evidence before one diagnostic retry, without weakening the guard.
+
+Review this exact operator-supplied source diff and the following original-test evidence. PR https://github.com/treeseed-ai/agent/pull/495 is publicly available if supported source reads allow it. Native BASE RED39181651558 had152pass/1intended missing-observation failure before source fix. Final focused61pass/zero failed or pending; typecheck/build/file policies pass. Final native complete checks are pending; do not infer a pass.
+
+Regression retains all4completed/failed/cancelled/expired outcomes across exact, checked-command, pending-first/recheck, missing, foreign-window, receipt-count, duplicate, pending, first-nonclock and final-nonclock evidence. Every semantic denial now must retain exactly the original parsed sandboxResult privately, with public sandboxId/stage and constant summary only. Valid cases emit no new rejection. Observation-delivery failure must preserve both errors plus original measured usage. Malformed wire receipts are rejected at original broker schema before any parsed result; tests require failure and no invented executor evidence. No source publication/terminal success after denial; one execute/start/finish/destroy, input immutability and native cleanup remain asserted.
+
+The expanded native case was moved intact from sandbox-broker-preparation.test.ts into existing sandbox-attempt-native.test.ts, same full test name; existing verifier path updated. Both files remain in complete discovery and original native early CI command. No additional runner, status model, profile rule, deadline extension or acceptance-binding change.
+
+Assess whether the production diff retains exact failed evidence using existing encrypted protected custody, avoids raw public leakage, preserves original errors/accounting/cleanup, and introduces any concrete safety defect. Return APPROVE or REQUEST_CHANGES, exact reviewed candidate, concise findings and access/test limitations. No code edits requested.
+
+BEGIN EXACT PRODUCTION DIFF
+diff --git a/src/provider/execution/microvm-executor.ts b/src/provider/execution/microvm-executor.ts
+index 50feab94..0420b35f 100644
+--- a/src/provider/execution/microvm-executor.ts
++++ b/src/provider/execution/microvm-executor.ts
+@@ -298,9 +298,9 @@ export async function createMicrovmExecutor(config: ProviderHostRuntimeConfig, m
+ 						const bytes = await client.downloadArtifact(prepared.sandboxId, prepared.operationToken, artifact.id, artifact.bytes, request.signal);
+ 						if (bytes.length !== artifact.bytes || `sha256:${createHash('sha256').update(bytes).digest('hex')}` !== artifact.digest) throw Object.assign(new Error('Sandbox artifact bytes disagree with their declared size or digest.'), { code: 'sandbox_artifact_integrity_invalid' });
+ 						return { ...artifact, content: bytes.toString('utf8') };
+ 					}));
+-					{
++					try {
+ 						const events = object(result.diagnostics).providerEvents;
+ 						const receipt = timingAwarenessEvidence(result.timingAwareness);
+ 						const actual = Array.isArray(events) ? timingAwarenessContract(events.map(object)) : undefined;
+ 						const identities = new Set<string>(), pending = new Set<string>(); let remaining = Infinity, checkedBeforeBlocking = false;
+@@ -319,8 +319,17 @@ export async function createMicrovmExecutor(config: ProviderHostRuntimeConfig, m
+ 							pending.delete(identity);
+ 						}
+ 						if (!valid || pending.size) throw new Error(`${result.status === 'completed' ? 'Completed' : 'Non-completed'} sandbox result lacks valid timing-awareness evidence.`,
+ 							result.status === 'completed' ? undefined : { cause: new Error(result.summary) });
++					} catch (error) {
++						try {
++							await request.emit?.({ type: 'execution.progress', occurredAt: new Date().toISOString(), summary: 'Sandbox timing evidence was rejected.',
++								payload: { sandboxId: prepared.sandboxId, stage: 'timing-awareness.rejected' },
++								protectedPayload: { sandboxResult: structuredClone(result) } });
++						} catch (observationFailure) {
++							throw new AggregateError([error, observationFailure], 'Rejected sandbox timing evidence could not be retained.');
++						}
++						throw error;
+ 					}
+ 					if (result.status === 'completed' && current.source?.authorization.mode === 'work') sourceReference = await publishSourceBranch(client, prepared, current.source, assignment, result, request);
+ 				} catch (error) { transportFailure = error; } finally {
+ 					request.signal?.removeEventListener('abort', cancelSandbox);
+
+END EXACT PRODUCTION DIFF
