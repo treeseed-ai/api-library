@@ -1,0 +1,112 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: fc5f7d748ef162bb299b5b6079eee003
+discussionRef:
+  store: treedx
+  model: discussion
+  id: mcp-coordination
+  path: discussions/mcp-coordination.mdx
+  revision: 1
+  digest: sha256:b0b531444af946bfdcd2627752294f29cebb1d9d84be00fe8c466d4d7a6489bd
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: mcp-coordination"
+discussionId: mcp-coordination
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - researcher
+recipientIds:
+  - researcher
+fileRefs: []
+contextRefs:
+  - kind: proposal
+    id: 46a2982b-7427-4ef0-8583-c5f4843063aa
+    projectId: b371c2ba-c9f3-41f0-b249-eb084ef9e610
+    immutableRef: 8a7a7fa747e4a6859330809ca2c3669451c1eefc
+    path: proposals/governance/make-real-treeseed-mcp-project-work-recoverable.mdx
+    digest: sha256:4c0703cf85b5b9003dcbebb044f93d010d3573606dc5601eaa3212107506cf60
+sourceMessageRefs: []
+createdAt: 2026-10-19T16:39:11.112Z
+---
+@api/researcher Review the actual next SDK429/API553 repair to the observed unchanged-send failure after proposal edits. This is useful static research, not code approval or acting authority. Existing proposal v4 remains open. Your checkout is staging19f; the supplied diff below is the integrator's real current repair, SHA256 28faa75b1b50149cbc67e2a92123bbe8a836b98f9258df5b64d2409aa6cc0174. Imports' at signs are displayed as HTML entities solely to avoid accidental agent addressing. Read the provided evidence, not the checkout. Do not run shell, source, or TreeDX read commands. Check the authoritative clock first and before your final answer; stop early enough for closeout. Find at most one concrete counterexample that would still move frozen context or accept a changed request; otherwise state no supported finding. Consider an interrupted admission after the message commit, before any invocation exists, and two concurrent identical retries. Do not estimate anyone else's execution or claim tests ran. Answer in at most180words.
+
+diff --git a/src/api/control-plane/repositories/capacity/communication-service.ts b/src/api/control-plane/repositories/capacity/communication-service.ts
+index cdc4f670..55e5af75 100644
+--- a/src/api/control-plane/repositories/capacity/communication-service.ts
++++ b/src/api/control-plane/repositories/capacity/communication-service.ts
+&#64;&#64; -3,7 +3,7 &#64;&#64; import { parseCommunicationAddresses } from '&#64;treeseed/sdk/operator-contracts';
+ import { createHash } from 'node:crypto';
+ import { authorizeCapacityTeam, type CapacityPrincipal } from './capacity-authorization.ts';
+ import { CapacityOperationError } from './capacity-operation-error.ts';
+-import { loadDiscussions } from '../../../discussions/content.ts';
++import { discussionMessageId, loadDiscussions } from '../../../discussions/content.ts';
+ import { resolveTeamCommunicationTargets } from '../../../capacity/services/capacity/invocations/communication-target-resolution.ts';
+ import { reconcileBlockedDiscussionInvocations } from '../../../capacity/services/capacity/invocations/discussion-invocation-service.ts';
+ import type { DiagnosticEnvelopeService } from '../../../../security/diagnostic-envelope.ts';
+&#64;&#64; -302,7 +302,26 &#64;&#64; export function createCommunicationService(store: any, discussions?: { create(pr
+ 				const projectTargets = targets.filter((target) => target.projectId === projectId);
+ 				const contextRefs: Row[] = [];
+ 				const proposalId = text(body.proposalId);
+-				if (proposalId) {
++				// The committed message freezes derived proposal context, including when
++				// authoring succeeded but invocation admission was interrupted. Retrying
++				// the declared request must not resolve a newer proposal into that grant.
++				const messageId = discussionMessageId(slug, `${idempotencyKey}:${projectId}`);
++				const history = await loadDiscussions({ store: contentStore, projectId, discussionId: slug,
++					exactMessageIds: [messageId], collection: 'messages' });
++				const original = history.messages.find((message: Row) => text(message.id) === messageId);
++				if (original) {
++					const frontmatter = record(original.frontmatter);
++					const frozen = Array.isArray(frontmatter.contextRefs) ? frontmatter.contextRefs.map(record) : [];
++					const proposals = frozen.filter(ref => ref.kind === 'proposal');
++					const recipients = strings(frontmatter.recipientIds).sort();
++					if (text(original.body) !== text(body.message)
++						|| text(frontmatter.parentWorkdayId) !== text(body.parentWorkdayId)
++						|| JSON.stringify(recipients) !== JSON.stringify(projectTargets.map(target => target.agentSlug).sort())
++						|| (proposalId ? proposals.length !== 1 || proposals[0]!.id !== proposalId || proposals[0]!.projectId !== projectId : proposals.length !== 0)) {
++						throw new CapacityOperationError(409, 'discussion_idempotency_conflict', 'The idempotency key is already bound to another discussion request.');
++					}
++					contextRefs.push(...frozen);
++				} else if (proposalId) {
+ 					const proposal = await store.getGovernanceProposal(proposalId);
+ 					if (!proposal || text(proposal.teamId, text(proposal.team_id)) !== teamId
+ 						|| text(proposal.projectId, text(proposal.project_id)) !== projectId) {
+diff --git a/src/api/discussions/content.ts b/src/api/discussions/content.ts
+index 304fb58a..fb552d99 100644
+--- a/src/api/discussions/content.ts
++++ b/src/api/discussions/content.ts
+&#64;&#64; -13,6 +13,9 &#64;&#64; import { parseCommunicationAddresses } from '&#64;treeseed/sdk/operator-contracts';
+ import type { OperationInvocationContext } from '../control-plane/catalog/operation-registry.ts';
+ 
+ type Row = Record<string, unknown>;
++export function discussionMessageId(discussionId: string, idempotencyKey: string): string {
++	return createHash('sha256').update(`${discussionId}:${idempotencyKey}`).digest('hex').slice(0, 32);
++}
+ function text(value: unknown, fallback = '') { return typeof value === 'string' && value.trim() ? value.trim() : fallback; }
+ function record(value: unknown): Row { if (value && typeof value === 'object' && !Array.isArray(value)) return value as Row; if (typeof value === 'string') try { return record(JSON.parse(value)); } catch { return {}; } return {}; }
+ function slug(value: string) { return value.toLowerCase().replace(/[^a-z0-9]+/gu, '-').replace(/^-+|-+$/gu, '').slice(0, 72) || 'discussion'; }
+diff --git a/src/api/discussions/discussion-service.ts b/src/api/discussions/discussion-service.ts
+index 2ad5e789..3a91bcd1 100644
+--- a/src/api/discussions/discussion-service.ts
++++ b/src/api/discussions/discussion-service.ts
+&#64;&#64; -1,6 +1,6 &#64;&#64;
+ import { createHash } from 'node:crypto';
+ import { admitDiscussionInvocations, resolveDiscussionInvocationAgents } from '../capacity/services/capacity/invocations/discussion-invocation-service.ts';
+-import { changeDiscussionStatus, commitDiscussionMessage, loadDiscussions, validateDiscussionContextRefs } from './content.ts';
++import { changeDiscussionStatus, commitDiscussionMessage, discussionMessageId, loadDiscussions, validateDiscussionContextRefs } from './content.ts';
+ import { discussionHistorySnapshot } from './history-snapshot.ts';
+ 
+ type Principal = { id: string; roles?: string[]; permissions?: string[]; metadata?: Record<string, unknown> } | undefined;
+&#64;&#64; -130,7 +130,7 &#64;&#64; export function createDiscussionService(dependencies: { store: any; capacity: an
+ 			if (body.intent === 'act') throw new DiscussionServiceError(409, 'discussion_operation_handoff_required',
+ 				'Discussion cannot directly create acting authority. Prepare an approval-backed operation handoff instead.');
+ 			const discussionId = text(body.discussionId, `discussion-${stableId(projectId, idempotencyKey)}`);
+-			const messageId = stableId(discussionId, idempotencyKey);
++			const messageId = discussionMessageId(discussionId, idempotencyKey);
+ 			const parentWorkdayId = text(body.parentWorkdayId) || null;
+ 			const parentAssignmentId = text(body.parentAssignmentId) || null;
+ 			let contextRefs: Awaited<ReturnType<typeof validateDiscussionContextRefs>> = [];
