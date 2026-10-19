@@ -11,13 +11,17 @@ request: "Repair TreeSeed API MCP mutations so an external coordinator can send
   rejection through existing native protocol and owning backend tests. This
   advances the API core objective and SDK #429 chunk 1. Keep the existing
   backend, scope, deadlines, original failed observations, and simulation
-  isolation. Research and planning must supply genuine estimates before acting;
-  this draft contains none. API source authority is treeseed-ai/api at
-  19f98bfaf0707cb9a0a97a4d763de0073eaf2f3a. No production publication or
-  alternate scheduler is authorized."
+  isolation. Participant execution estimates remain absent. Prior research-only
+  prose estimates are retained in the discussion and do not grant acting
+  authority. Review the integrator candidate in API PR581 before approval;
+  complete native verification and actual MCP recovery remain pending. API
+  source authority is treeseed-ai/api at
+  7cb5901795f1155d565c55d8e4eb0fc313855dc4; original design base
+  19f98bfaf0707cb9a0a97a4d763de0073eaf2f3a is retained in proposal v1. No
+  production publication or alternate scheduler is authorized."
 summary: Enable reliable coordinator-directed project work through the same
   governed API backend used by SDK and CLI.
-status: draft
+status: discussing
 objectiveRefs:
   - store: treedx
     model: objective
@@ -30,9 +34,13 @@ evidenceRefs:
     model: repository
     id: treeseed-ai/api
     repository: treeseed-ai/api
-    commit: 19f98bfaf0707cb9a0a97a4d763de0073eaf2f3a
+    commit: 7cb5901795f1155d565c55d8e4eb0fc313855dc4
   - store: url
     model: issue
     id: sdk-429
     url: https://github.com/treeseed-ai/sdk/issues/429
+  - store: url
+    model: pull-request
+    id: api-581
+    url: https://github.com/treeseed-ai/api/pull/581
 ---
