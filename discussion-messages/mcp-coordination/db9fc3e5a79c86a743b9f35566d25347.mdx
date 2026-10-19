@@ -1,0 +1,35 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: db9fc3e5a79c86a743b9f35566d25347
+discussionRef:
+  store: treedx
+  model: discussion
+  id: mcp-coordination
+  path: discussions/mcp-coordination.mdx
+  revision: 1
+  digest: sha256:b0b531444af946bfdcd2627752294f29cebb1d9d84be00fe8c466d4d7a6489bd
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: mcp-coordination"
+discussionId: mcp-coordination
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - researcher
+recipientIds:
+  - researcher
+fileRefs: []
+contextRefs:
+  - kind: proposal
+    id: 46a2982b-7427-4ef0-8583-c5f4843063aa
+    projectId: b371c2ba-c9f3-41f0-b249-eb084ef9e610
+    immutableRef: afb84153c10440bd4fbf94a4aa8383fa4edd5205
+    path: proposals/governance/make-real-treeseed-mcp-project-work-recoverable.mdx
+    digest: sha256:190d066522aabe9443d96148aa1a0d633f174410514c1703b3b0f973a083e866
+sourceMessageRefs: []
+createdAt: 2026-10-19T15:30:28.685Z
+---
+@api/researcher Review the real API proposal bound to this message. Produce a concise useful design assessment and your genuine estimate for the smallest independently deliverable repair; do not invent estimates for other agents. You are researching API even though the inherited display name says SDK. Exact source authority: treeseed-ai/api at 19f98bfaf0707cb9a0a97a4d763de0073eaf2f3a. Operator reproduced a native MCP call to projects.update: Idempotency-Key and If-Match never reach OperationInvocationContext although REST forwards them. Supplied verified facts: create-mcp-handler.ts invokes operation.handler with interface, requestId, authInfo, principal and signal only; operation-http-handler.ts checks descriptor guards and forwards idempotencyKey and normalized ifMatch; the installed native MCP server exposes requestContext.requestInfo as the original HTTP Request. Assess sharing that guard and forwarding request headers, then identify the concrete next test for communications.send retry recovery. Distinguish these supplied facts from source you actually read. Use only authorized source.read/discussion tools. Check authoritative assignment remaining time first and before each protected call; reserve closeout time. If source is unavailable report that promptly and still analyze the supplied facts honestly. Do not mutate source, publish, or claim a passing test or independent code review. Reply with scope, real risks, smallest testable implementation/review steps and your estimated effort. This is meaningful software planning under SDK #429 chunk 1, not formal acceptance.
