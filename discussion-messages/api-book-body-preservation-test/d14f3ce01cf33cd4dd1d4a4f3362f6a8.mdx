@@ -1,0 +1,33 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: d14f3ce01cf33cd4dd1d4a4f3362f6a8
+discussionRef:
+  store: treedx
+  model: discussion
+  id: api-book-body-preservation-test
+  path: discussions/api-book-body-preservation-test.mdx
+  revision: 1
+  digest: sha256:d3b2bbf2a22dd89267cca5f025060841776090b53b045e4859e5c41e4044fc5b
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: api-book-body-preservation-test"
+discussionId: api-book-body-preservation-test
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - tester
+recipientIds:
+  - tester
+fileRefs: []
+contextRefs: []
+sourceMessageRefs: []
+createdAt: 2026-10-19T02:19:08.488Z
+---
+@api/tester Produce a focused executable regression proposal for API573, frozen project Git source adebc9caef11d4347f7d69014631616379c12f4f. This is ordinary read-only code-proposal work: inspect the attached source, do not modify files, run tests, create workdays or claim CI results. The integrator will apply the exact approved test-only diff and record intended RED before any production repair. Return a small complete unified diff against the existing owning test file with exact source citations and expected intended failure, plus the existing native integration case that must be strengthened afterward. Do not return an implementation repair.
+
+Observed risk: src/api/knowledge/runtime/authoring.ts serializeBookDraft(input) uses serializeFrontmatterDocument(metadata,'\n'); src/api/control-plane/knowledge/knowledge-workspace-service.ts bookDocument passes metadata only. Existing Book source has body text, so editing metadata or upgrading invalid v2 through updateContent risks losing its body. Exact Admin reads prove five non-empty bodies and one newline-only; no real Book write has occurred. Existing tests/unit/control-plane/knowledge/workspaces/book-repin.test.ts legacy case has an empty body and only asserts the diff includes treeseed.book/v3, so it misses this. Cover at least a legacy v2 non-empty body and a current v3 non-empty body with distinctive Markdown, Unicode and trailing whitespace/newlines, preserving exact original body bytes through updateContent while identity/revision remain API-owned. Keep existing repinning, strict validation and negative cases. Reuse existing test utilities. The assertion must inspect the resulting file/body or prove a complete round-trip: merely finding body text in a patch is invalid because it may be a removed line. Do not make a mock or string assertion into claimed native integration. Existing architecture/relation-authoring-native.test.ts and its fixture show the real disposable TreeDX/native PostgreSQL boundary; inspect only enough to identify the appropriate extension, do not start services or substitute PGlite for required native proof.
+
+Clock coaching: first action authoritative time status; immediately BEFORE EVERY shell command including read-only Git/rg/sed; await the check; final action time status after all other tools. Keep every command within actual remaining seconds and reserve closeout. One bounded source-read batch is preferable. Git source commits are not TreeDX content refs. Use attached /workspace/project for source, not guessed TreeDX paths or broader permissions. If evidence is missing, state it honestly. The existing handler publishes your reply after the model turn; no separate discussion-write tool is required. Do not fabricate an applied patch, passing/failing execution receipt, result ref or review.
