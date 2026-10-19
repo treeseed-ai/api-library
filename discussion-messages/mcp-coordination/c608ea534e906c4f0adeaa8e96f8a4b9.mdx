@@ -1,0 +1,35 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: c608ea534e906c4f0adeaa8e96f8a4b9
+discussionRef:
+  store: treedx
+  model: discussion
+  id: mcp-coordination
+  path: discussions/mcp-coordination.mdx
+  revision: 1
+  digest: sha256:b0b531444af946bfdcd2627752294f29cebb1d9d84be00fe8c466d4d7a6489bd
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: mcp-coordination"
+discussionId: mcp-coordination
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - reviewer
+recipientIds:
+  - reviewer
+fileRefs: []
+contextRefs:
+  - kind: proposal
+    id: 46a2982b-7427-4ef0-8583-c5f4843063aa
+    projectId: b371c2ba-c9f3-41f0-b249-eb084ef9e610
+    immutableRef: 60e554726339e2b23b4f532df0bc78a6905918f2
+    path: proposals/governance/make-real-treeseed-mcp-project-work-recoverable.mdx
+    digest: sha256:cd6e29e46208d0f85a5628a3dfc419325209e1821f70d419cb20028ce34779c2
+sourceMessageRefs: []
+createdAt: 2026-10-19T16:06:38.730Z
+---
+@api/reviewer Independently review the real MCP metadata candidate pinned by this open proposal v3: treeseed-ai/api at 4f4130e6d7198cb2be45d22755ed3d4db410efdb (PR581). This is bounded static contract/security review; complete Actions and actual MCP recovery remain pending. Call treeseed_time_status first and immediately before every source command including retries. Read only src/api/control-plane/authorization/invocation-policy.ts, src/api/control-plane/catalog/sdk-standard-schema.ts and src/api/control-plane/mcp/create-mcp-handler.ts in ONE bounded source command. Check descriptor-derived allowed headers, HTTP/tool conflict denial, quoted If-Match normalization, unchanged handler authorization, and stripping metadata before domain dispatch. A known separate backend replay failure after proposal edits is retained in proposal v3; do not count it as fixed by this transport patch. Do not run tests, inspect dependencies, guess paths, modify source, or publish. In <=180 words report concrete bugs with file/line, or no findings in inspected scope with explicit validation limits. Final clock then substantive response, reserving the issued closeout window. Do not claim full approval or tests you did not execute.
