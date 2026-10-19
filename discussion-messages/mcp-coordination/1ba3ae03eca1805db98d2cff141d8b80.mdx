@@ -1,0 +1,208 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: 1ba3ae03eca1805db98d2cff141d8b80
+discussionRef:
+  store: treedx
+  model: discussion
+  id: mcp-coordination
+  path: discussions/mcp-coordination.mdx
+  revision: 1
+  digest: sha256:b0b531444af946bfdcd2627752294f29cebb1d9d84be00fe8c466d4d7a6489bd
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: mcp-coordination"
+discussionId: mcp-coordination
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - reviewer
+recipientIds:
+  - reviewer
+fileRefs: []
+contextRefs:
+  - kind: proposal
+    id: 46a2982b-7427-4ef0-8583-c5f4843063aa
+    projectId: b371c2ba-c9f3-41f0-b249-eb084ef9e610
+    immutableRef: 60e554726339e2b23b4f532df0bc78a6905918f2
+    path: proposals/governance/make-real-treeseed-mcp-project-work-recoverable.mdx
+    digest: sha256:cd6e29e46208d0f85a5628a3dfc419325209e1821f70d419cb20028ce34779c2
+sourceMessageRefs: []
+createdAt: 2026-10-19T16:16:46.682Z
+---
+@api/reviewer Review this supplied REAL PR581 implementation diff, exact base 19f98bfaf0707cb9a0a97a4d763de0073eaf2f3a -> head 4f4130e6d7198cb2be45d22755ed3d4db410efdb. Git remote head independently read back equal. This is a static diff review, not a checkout review or full approval. The previous failed attempt received the project checkout at 19f98bf and violated per-command clocks; that failed result remains rejected. A proposal citation does not select another checkout. This request fixes that input error by providing the actual complete implementation diff below. Original UTF-8 diff SHA256: 3e4bbc59858b5058aba6f8c59e53575c916aee65ab9d04bbe02a23b0cab4379c. In the display ONLY, the at-sign in package imports is encoded as &#64; to prevent accidental agent addressing; restore that single encoding mentally.
+
+Use this supplied diff and current discussion as your authorized review input. NO shell, source, dependency or TreeDX file-read tools are needed or requested. Call treeseed_time_status first and again as your final tool action, then respond in <=180 words with concrete correctness/security findings or no findings within this static diff, including limits. Do not claim source checkout at the candidate, test execution, complete approval, or that the separate proposal-edit replay bug is fixed. Do not poll the clock repeatedly. Reserve the original closeout window.
+
+```diff
+diff --git a/src/api/control-plane/authorization/invocation-policy.ts b/src/api/control-plane/authorization/invocation-policy.ts
+index f4467215..f537a837 100644
+--- a/src/api/control-plane/authorization/invocation-policy.ts
++++ b/src/api/control-plane/authorization/invocation-policy.ts
+&#64;&#64; -17,3 +17,25 &#64;&#64; export function enforceOperationAuthorization(
+ 	const missingScope = descriptor.oauthScopes.find((scope) => !authInfo.scopes.includes(scope));
+ 	if (missingScope) throw new ControlPlaneOperationError(403, 'oauth_scope_insufficient', `The operation requires ${missingScope}.`);
+ }
++
++/** Apply the descriptor's write guards before either transport dispatches work. */
++export function readOperationPreconditions(descriptor: ControlPlaneOperationDescriptor, headers?: Headers, supplied?: Record<string, string>) {
++	const read = (name: string) => {
++		const transport = headers?.get(name) ?? undefined, argument = supplied?.[name]?.trim();
++		if (transport !== undefined && argument !== undefined && transport !== argument) {
++			throw new ControlPlaneOperationError(409, 'operation_metadata_conflict', `Conflicting ${name} values in HTTP headers and tool arguments.`);
++		}
++		return argument ?? transport;
++	};
++	const idempotencyKey = read(descriptor.idempotency.header)
++		?? (descriptor.operationId === 'repositories.github.webhook' ? headers?.get('x-github-delivery') : undefined)
++		?? undefined;
++	const ifMatch = read(descriptor.concurrency.writeHeader);
++	if (descriptor.idempotency.required && !idempotencyKey) {
++		throw new ControlPlaneOperationError(400, 'idempotency_key_required', `${descriptor.idempotency.header} is required.`);
++	}
++	if (descriptor.concurrency.required && !ifMatch) {
++		throw new ControlPlaneOperationError(412, 'precondition_required', `${descriptor.concurrency.writeHeader} is required.`);
++	}
++	return { idempotencyKey, ifMatch: ifMatch?.replace(/^"|"$/gu, '') };
++}
+diff --git a/src/api/control-plane/catalog/sdk-standard-schema.ts b/src/api/control-plane/catalog/sdk-standard-schema.ts
+index 58cd466a..08dc3d30 100644
+--- a/src/api/control-plane/catalog/sdk-standard-schema.ts
++++ b/src/api/control-plane/catalog/sdk-standard-schema.ts
+&#64;&#64; -1,4 +1,5 &#64;&#64;
+ import { controlPlaneSchemaJson, type ControlPlaneOperationBinding } from '&#64;treeseed/sdk/operator-contracts';
++import { z } from 'zod';
+ 
+ type SdkSchema = ControlPlaneOperationBinding<unknown, unknown, unknown, unknown>['schema']['output'];
+ 
+&#64;&#64; -25,15 +26,22 &#64;&#64; export function sdkStandardSchema(schema: SdkSchema) {
+ }
+ 
+ export function sdkOperationInputStandardSchema(binding: {
+-	descriptor: Pick<ControlPlaneOperationBinding['descriptor'], 'kind'>;
++	descriptor: Pick<ControlPlaneOperationBinding['descriptor'], 'kind' | 'idempotency' | 'concurrency'>;
+ 	schema: { path: SdkSchema; query: SdkSchema; body: SdkSchema };
+ }) {
++	const headerNames: string[] = binding.descriptor.kind === 'mutation'
++		? [binding.descriptor.idempotency.header, ...(binding.descriptor.concurrency.required ? [binding.descriptor.concurrency.writeHeader] : [])] : [];
++	const headersSchema = headerNames.length ? z.object(Object.fromEntries(headerNames.map(name => [name,
++		z.string().min(1).regex(/^(?=.*\S)[^\r\n\u0000]+$/u).describe(name === binding.descriptor.idempotency.header
++			? 'Reuse this key for retries of the unchanged request.' : 'Exact current resource version read before this mutation.'),
++	]))).strict() : undefined;
+ 	const document = {
+ 		type: 'object',
+ 		properties: {
+ 			path: controlPlaneSchemaJson(binding.schema.path),
+ 			query: controlPlaneSchemaJson(binding.schema.query),
+ 			...(binding.descriptor.kind === 'mutation' ? { body: controlPlaneSchemaJson(binding.schema.body) } : {}),
++			...(headersSchema ? { headers: z.toJSONSchema(headersSchema) } : {}),
+ 		},
+ 		additionalProperties: false,
+ 	};
+&#64;&#64; -43,13 +51,23 &#64;&#64; export function sdkOperationInputStandardSchema(binding: {
+ 			vendor: 'treeseed-sdk',
+ 			validate(value: unknown) {
+ 				const input = value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
++				let headers: Record<string, string> | undefined;
++				if (input.headers !== undefined) {
++					if (!headersSchema) {
++						return { issues: [{ path: ['headers'], message: 'Supply only the advertised mutation headers.' }] };
++					}
++					const parsed = headersSchema.safeParse(input.headers);
++					if (!parsed.success) return { issues: parsed.error.issues.map(issue => ({ path: ['headers', ...issue.path.map(String)], message: issue.message })) };
++					headers = parsed.data;
++				}
+ 				const path = binding.schema.path.safeParse(input.path ?? {});
+ 				const query = binding.schema.query.safeParse(input.query ?? {});
+ 				const body = binding.schema.body.safeParse(binding.descriptor.kind === 'mutation' ? input.body ?? {} : undefined);
+ 				if (!path.success) return { issues: issues(path.error) };
+ 				if (!query.success) return { issues: issues(query.error) };
+ 				if (!body.success) return { issues: issues(body.error) };
+-				return { value: { path: path.data, query: query.data, body: body.data } };
++				return { value: { path: path.data, query: query.data, body: body.data,
++					...(headers !== undefined ? { headers } : {}) } };
+ 			},
+ 			jsonSchema: { input: () => document, output: () => document },
+ 		},
+diff --git a/src/api/control-plane/http/operation-http-handler.ts b/src/api/control-plane/http/operation-http-handler.ts
+index 62cba073..d9a091a7 100644
+--- a/src/api/control-plane/http/operation-http-handler.ts
++++ b/src/api/control-plane/http/operation-http-handler.ts
+&#64;&#64; -3,7 +3,7 &#64;&#64; import type { AuthInfo } from '&#64;modelcontextprotocol/server';
+ import type { Context } from 'hono';
+ import { ZodError } from 'zod';
+ import { ControlPlaneOperationError, type BoundOperation } from '../catalog/operation-registry.ts';
+-import { enforceOperationAuthorization } from '../authorization/invocation-policy.ts';
++import { enforceOperationAuthorization, readOperationPreconditions } from '../authorization/invocation-policy.ts';
+ import { decodeConfirmation, type ConfirmationService } from '../confirmation/confirmation-service.ts';
+ 
+ type Authenticate = (request: Request) => Promise<AuthInfo | Response>;
+&#64;&#64; -75,20 +75,13 &#64;&#64; export function createOperationHttpHandler(
+ 		const requestId = context.req.header('x-request-id')?.trim() || randomUUID();
+ 		const descriptor = operation.binding.descriptor;
+ 		try {
+-			const idempotencyKey = context.req.header(descriptor.idempotency.header)
+-				?? (descriptor.operationId === 'repositories.github.webhook' ? context.req.header('x-github-delivery') : undefined);
+ 			const providerAuth = context.get('capacityProviderAccessAuth') as { principal?: { membershipId?: string; capacityProviderId?: string; teamId?: string; scopes?: string[] } } | undefined;
+ 			const authInfo = descriptor.authentication === 'oauth'
+ 				|| (descriptor.authentication === 'oauth_or_provider' && !providerAuth?.principal)
+ 				? await authenticate(context.req.raw) : undefined;
+ 			if (authInfo instanceof Response) return authInfo;
+ 			enforceOperationAuthorization(descriptor, authInfo, { providerAuthenticated: Boolean(providerAuth?.principal) });
+-			if (descriptor.idempotency.required && !idempotencyKey) {
+-				throw new ControlPlaneOperationError(400, 'idempotency_key_required', `${descriptor.idempotency.header} is required.`);
+-			}
+-			if (descriptor.concurrency.required && !context.req.header(descriptor.concurrency.writeHeader)) {
+-				throw new ControlPlaneOperationError(412, 'precondition_required', `${descriptor.concurrency.writeHeader} is required.`);
+-			}
++			const preconditions = readOperationPreconditions(descriptor, context.req.raw.headers);
+ 			const parsed = await operationInput(context, operation);
+ 			const input = parsed.input;
+ 			if (descriptor.confirmation === 'input_required') {
+&#64;&#64; -114,8 +107,7 &#64;&#64; export function createOperationHttpHandler(
+ 				requestId,
+ 				requestUrl: context.req.url,
+ 				traceparent: context.req.header('traceparent'),
+-				idempotencyKey,
+-				ifMatch: context.req.header(descriptor.concurrency.writeHeader)?.replace(/^"|"$/gu, ''),
++				...preconditions,
+ 				rawBody: parsed.rawBody,
+ 				requestHeaders: Object.fromEntries(['content-type', 'content-length', 'referer', 'x-treeseed-feedback-path', 'x-hub-signature-256',
+ 					'x-github-delivery', 'x-github-event', 'authorization', 'x-treeseed-provider-proof',
+diff --git a/src/api/control-plane/mcp/create-mcp-handler.ts b/src/api/control-plane/mcp/create-mcp-handler.ts
+index 9f1e5996..f3bcb1ba 100644
+--- a/src/api/control-plane/mcp/create-mcp-handler.ts
++++ b/src/api/control-plane/mcp/create-mcp-handler.ts
+&#64;&#64; -5,7 +5,7 &#64;&#64; import { sdkOperationInputStandardSchema, sdkStandardSchema } from '../catalog/s
+ import { createMcpCatalog } from './mcp-catalog.ts';
+ import { decodeConfirmation, encodeConfirmation, type ConfirmationService } from '../confirmation/confirmation-service.ts';
+ import { completePromptObjective, completeResourceVariable } from './completion-source.ts';
+-import { enforceOperationAuthorization } from '../authorization/invocation-policy.ts';
++import { enforceOperationAuthorization, readOperationPreconditions } from '../authorization/invocation-policy.ts';
+ 
+ export function createControlPlaneMcpHandler(registry: OperationRegistry, confirmations?: ConfirmationService, bus?: ServerEventBus) {
+ 	const mcpCatalog = createMcpCatalog(registry);
+&#64;&#64; -28,6 +28,8 &#64;&#64; export function createControlPlaneMcpHandler(registry: OperationRegistry, confir
+ 				},
+ 			}, async (input, context) => {
+ 				enforceOperationAuthorization(descriptor, requestContext.authInfo);
++				const { headers, ...operationInput } = input as { headers?: Record<string, string>; path: unknown; query: unknown; body: unknown };
++				const preconditions = readOperationPreconditions(descriptor, requestContext.requestInfo?.headers, headers);
+ 				if (descriptor.confirmation === 'input_required') {
+ 					const principalId = String((requestContext.authInfo?.extra?.principal as any)?.id ?? '');
+ 					const clientId = String(requestContext.authInfo?.clientId ?? '');
+&#64;&#64; -49,8 +51,9 &#64;&#64; export function createControlPlaneMcpHandler(registry: OperationRegistry, confir
+ 				if (context.mcpReq.signal.aborted) throw context.mcpReq.signal.reason;
+ 				const progressToken = context.mcpReq._meta?.progressToken;
+ 				if (progressToken !== undefined) await context.mcpReq.notify({ method: 'notifications/progress', params: { progressToken, progress: 0, total: 1 } });
+-				const output = await operation.handler(input as any, {
++				const output = await operation.handler(operationInput as any, {
+ 					interface: 'mcp', requestId: crypto.randomUUID(), authInfo: requestContext.authInfo,
++					...preconditions,
+ 					principal: requestContext.authInfo?.extra?.principal as any, signal: context.mcpReq.signal,
+ 				});
+ 				if (context.mcpReq.signal.aborted) throw context.mcpReq.signal.reason;
+
+```
