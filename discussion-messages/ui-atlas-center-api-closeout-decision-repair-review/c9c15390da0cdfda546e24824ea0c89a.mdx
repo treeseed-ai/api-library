@@ -1,0 +1,124 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: c9c15390da0cdfda546e24824ea0c89a
+discussionRef:
+  store: treedx
+  model: discussion
+  id: ui-atlas-center-api-closeout-decision-repair-review
+  path: discussions/ui-atlas-center-api-closeout-decision-repair-review.mdx
+  revision: 1
+  digest: sha256:17c1d7dc10c5347a919b518356440899c9fb3ce26610cdd9510d854a77fb33c6
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: ui-atlas-center-api-closeout-decision-repair-review"
+discussionId: ui-atlas-center-api-closeout-decision-repair-review
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - reviewer
+recipientIds:
+  - reviewer
+fileRefs: []
+contextRefs: []
+sourceMessageRefs: []
+createdAt: 2026-10-19T11:20:51.925Z
+---
+@api/reviewer Independently review bounded API576 maintenance candidate363cad172a74aa3313f35cf171f9a57e2400b146, treeb34abed19eb526274aa817f2d792f5f6e5f8866c, basef97156777e21c89ba44d223dbd012ff30da08c10. SDK429/API573/574/577. Supplied exact production predicates and focused assertions below; candidate absent from attached base, so do not substitute checkout code or probe missingGitobjects. No commands/builds/edits requested; initial authoritativeclock, supplieddiffinspection, finalclock, immediatelyreply <=160words APPROVE or REQUEST_CHANGES with scope/limitations. If any tool/sourcecommand is needed, take a fresh authoritativeclock BEFORE EACH one. Handler publishes the reply; no direct write tool is needed. This is not retry/approval of either retained expired review.
+Requirements: original failed/null closeout retains exact immutable attempt/usage/deadline and exactly-once settlement; actual report may be assembled after verified teardown but report creation/deadline/now and teardown creation/now must each be bounded. No successfabrication or increasedallowance. CanonicalDecision must distinguish actual user-manager authority from automatic system/null-created admin_chamber supportvote, preserving actual voters/timestamps and reservedDecisionidentity. Empty/malformedvoteauthority must fail. Existingcloseerrorfixture gets explicit user type, preserving exacterror/journalassertions.
+Observed focusedcloseout14pass/2RED then16green; disposition4pass/1RED then8green; affectedauthority14green. Previous fullnative2196pass/1fixturefail, correctedfixture nowincluded. Current native39239852510 has completedfullsuite and is runningremainingcomponentproof; finalstatuspending. Nativeactualmanager/vote/SQLinterruption+recovery exercised separately. No fake manager/vote/profile or deadlineextension. Otherdiffs restructure original13credentialdenialcases without deleting any, and put real voter/user/role setup into existingnativefixture. Scope your review to supplied predicates/tests; native/wholepackageCI remains separate.
+diff --git a/src/api/capacity/services/capacity/assignments/lifecycle/completion/assignment-expired-closeout.ts b/src/api/capacity/services/capacity/assignments/lifecycle/completion/assignment-expired-closeout.ts
+index 5e1b5f70..192de0a8 100644
+--- a/src/api/capacity/services/capacity/assignments/lifecycle/completion/assignment-expired-closeout.ts
++++ b/src/api/capacity/services/capacity/assignments/lifecycle/completion/assignment-expired-closeout.ts
+&#64;&#64; -31,10 +31,13 &#64;&#64; export async function acknowledgeExpiredCloseout(database: CapacityGovernanceDat
+ 	const output = record(input.output), teardown = record(output.teardown), parsed = assignmentResultSchema.safeParse(output.assignmentResult);
+ 	if (!parsed.success || !isDeepStrictEqual(parsed.data, output.assignmentResult) || parsed.data.assignmentId !== assignment.id
+ 		|| teardown.verified !== true || typeof output.sandboxId !== 'string' || !output.sandboxId.trim()) return deny();
+ 	const produced = Date.parse(parsed.data.completedAt), closed = Date.parse(String(teardown.completedAt ?? ''));
++		// The owning host may assemble its final report after physical teardown.
++		// Bound both original observations without promoting the expired result.
+ 	if (!Number.isFinite(produced) || !Number.isFinite(closed) || produced < Date.parse(attempt.createdAt)
+-		|| produced > Date.parse(attempt.deadline) || produced > closed || closed > Date.parse(now)) return deny();
++			|| produced > Date.parse(attempt.deadline) || produced > Date.parse(now)
++			|| closed < Date.parse(attempt.createdAt) || closed > Date.parse(now)) return deny();
+ 	const native = record(parsed.data.usage.native), positive = (value: unknown): value is number =>
+ 		typeof value === 'number' && Number.isFinite(value) && value > 0;
+ 	if (!positive(native.activeSeconds) || !positive(native.elapsedSeconds) || native.activeSeconds > native.elapsedSeconds
+ 		|| Math.ceil(native.elapsedSeconds) !== parsed.data.usage.elapsedSeconds) return deny();
+diff --git a/src/api/governance/executable-proposal.ts b/src/api/governance/executable-proposal.ts
+index 6fd95c81..47b0908f 100644
+--- a/src/api/governance/executable-proposal.ts
++++ b/src/api/governance/executable-proposal.ts
+&#64;&#64; -132,9 +132,12 &#64;&#64; export async function publishProposalDecision(store: any, proposal: Row, row: Ro
+ 	if (!initial || initial.repositoryId !== proposalRef.repository) throw new Error('The accepted proposal repository binding changed before Decision publication.');
+ 	const path = projectLibraryPath(initial.contentPath, 'decisions', `${id}.mdx`);
+ 	const connection = await resolveKnowledgeGatewayConnection(store, { projectId, write: true, workspaceRefs: [branchName, text(proposalRef.commit)], workspacePaths: [path] });
+ 	if (!connection) throw new Error('Decision publication requires the original project binding.');
+-	const authority = proposal.closedReason === 'admin_approved';
++	// The administrative chamber also emits admin_approved for a recorded vote.
++	// Automatic evaluation has no user creator; preserve its real vote authority.
++	const authority = proposal.closedReason === 'admin_approved'
++		&& row.created_by_type === 'user' && Boolean(text(row.created_by_id));
+ 	const userRef = (userId: string) => ({ store: 'postgresql', model: 'user', id: userId });
+ 	const decidedByRefs = authority ? [userRef(text(row.created_by_id))] : votes.map(vote => userRef(text(vote.userId)));
+ 	const definition = { schemaVersion: 'treeseed.decision/v1', id, projectId, decisionClass: 'proposal',
+ 		decisionMethod: authority ? 'authority' : 'vote', subjectRef: proposalRef, disposition: 'approved',
+diff --git a/tests/unit/control-plane/governance/decision-execution-plan-authority.test.ts b/tests/unit/control-plane/governance/decision-execution-plan-authority.test.ts
+index 98adaa14..bfd15c3d 100644
+--- a/tests/unit/control-plane/governance/decision-execution-plan-authority.test.ts
++++ b/tests/unit/control-plane/governance/decision-execution-plan-authority.test.ts
+&#64;&#64; -42,9 +42,9 &#64;&#64; describe('decision proposal authority', () => {
+ describe('accepted proposal decision recovery', () => {
+ 	it('retains the original open workspace journal and close failure after native Decision readback instead of reporting successful closure', async () => {
+ 		const proposalRef = { store: 'treedx', model: 'proposal', id: 'proposal', revision: 2, digest: `sha256:${digest}`,
+ 			repository: 'repository', commit: 'a'.repeat(40), path: 'proposals/proposal.mdx' };
+-		const row = { id: 'decision', project_id: 'project', status: 'creating', created_by_id: 'operator', created_at: '2026-10-04T00:00:00.000Z',
++		const row = { id: 'decision', project_id: 'project', status: 'creating', created_by_type: 'user', created_by_id: 'operator', created_at: '2026-10-04T00:00:00.000Z',
+ 			decision_record_json: JSON.stringify({ proposalRef, rationale: 'Original approval.' }) }, proposal = { closedReason: 'admin_approved' };
+ 		const client = new TreeDxInfrastructureClient(new TreeDxClient({ baseUrl: 'http://127.0.0.1:1', transport: new FetchTransport({ baseUrl: 'http://127.0.0.1:1', token: 'UNIT input' }) }));
+ 		const journal: unknown[][] = [], closeFailure = new Error('controlled native close failure'); let source = '';
+ 		const store = { getProject: async () => ({ teamId: 'team' }), all: async () => [],
+diff --git a/tests/unit/control-plane/governance/proposals/proposal-decision-disposition.test.ts b/tests/unit/control-plane/governance/proposals/proposal-decision-disposition.test.ts
+new file mode 100644
+index 00000000..6f4b6966
+--- /dev/null
++++ b/tests/unit/control-plane/governance/proposals/proposal-decision-disposition.test.ts
+&#64;&#64; -0,0 +1,33 &#64;&#64;
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++const observed=vi.hoisted(()=>({ definition:undefined as unknown,read:vi.fn() }));
++vi.mock('../../../../../src/api/knowledge/gateway-treedx-connection.ts',()=>({
++ projectLibraryPath:(_prefix:string,collection:string,file:string)=>collection+'/'+file,
++ resolveKnowledgeGatewayConnection:vi.fn(async()=>({repositoryId:'repository',contentPath:'.',client:{readRepositoryFile:observed.read}})),
++}));
++vi.mock('../../../../../src/api/content/frontmatter.ts',async(importOriginal)=>{
++ const actual=await importOriginal<typeof import('../../../../../src/api/content/frontmatter.ts')>();
++ return {...actual,serializeFrontmatterDocument:vi.fn((value:Record<string,unknown>)=>{observed.definition=structuredClone(value);return actual.serializeFrontmatterDocument(value);})};
++});
++import { publishProposalDecision } from '../../../../../src/api/governance/executable-proposal.ts';
++const ref={store:'treedx',model:'proposal',id:'proposal',revision:6,digest:`sha256:${'a'.repeat(64)}`,repository:'repository',commit:'b'.repeat(40),path:'proposals/proposal.mdx'};
++const row={id:'decision',project_id:'project',created_by_type:'system',created_by_id:null,created_at:'2026-10-19T09:26:25.873Z',decision_record_json:JSON.stringify({proposalRef:ref,rationale:'Authorize the exact bounded repair.'})};
++const proposal={closedReason:'admin_approved'};
++const vote={userId:'operator',vote:'support',reason:'Authorize bounded work.',updatedAt:'2026-10-19T09:26:25.859Z'};
++describe('canonical proposal Decision disposition custody',()=>{
++ beforeEach(()=>{observed.definition=undefined;observed.read.mockReset().mockRejectedValue(new Error('independent publication boundary'));});
++ it('retains a recorded administrative support vote as vote authority when automatic evaluation reserved a system-owned Decision',async()=>{
++  const original=structuredClone({row,proposal,vote});
++  await expect(publishProposalDecision({},proposal,row,[vote])).rejects.toThrow('independent publication boundary');
++  expect(observed.definition).toEqual({schemaVersion:'treeseed.decision/v1',id:'decision',projectId:'project',decisionClass:'proposal',decisionMethod:'vote',subjectRef:ref,disposition:'approved',rationale:'Authorize the exact bounded repair.',authorityRefs:[{store:'postgresql',model:'user',id:'operator'}],decidedByRefs:[{store:'postgresql',model:'user',id:'operator'}],positions:[{actorRef:{store:'postgresql',model:'user',id:'operator'},position:'approve',rationale:vote.reason,recordedAt:vote.updatedAt}],decidedAt:row.created_at});
++  expect({row,proposal,vote}).toEqual(original);
++ });
++ it('preserves actual manager authority without inventing a vote or its timestamp',async()=>{
++  await expect(publishProposalDecision({},proposal,{...row,created_by_type:'user',created_by_id:'manager'},[])).rejects.toThrow('independent publication boundary');
++  expect(observed.definition).toMatchObject({decisionMethod:'authority',decidedByRefs:[{store:'postgresql',model:'user',id:'manager'}],decidedAt:row.created_at});
++  expect(observed.definition).not.toHaveProperty('positions');
++ });
++ it.each([{votes:[]},{votes:[{...vote,userId:''}]},{votes:[{...vote,updatedAt:'not-a-clock'}]}])('denies absent or malformed recorded voters before native publication: $votes',async({votes})=>{
++  await expect(publishProposalDecision({},proposal,row,votes)).rejects.toMatchObject({code:'governance_decision_content_invalid'});
++  expect(observed.definition).toBeUndefined();expect(observed.read).not.toHaveBeenCalled();
++ });
++});
+
+Literal at-signs escapedonlyforrecipient safety.
