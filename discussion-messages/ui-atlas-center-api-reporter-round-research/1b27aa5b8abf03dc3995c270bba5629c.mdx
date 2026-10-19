@@ -1,0 +1,102 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: 1b27aa5b8abf03dc3995c270bba5629c
+discussionRef:
+  store: treedx
+  model: discussion
+  id: ui-atlas-center-api-reporter-round-research
+  path: discussions/ui-atlas-center-api-reporter-round-research.mdx
+  revision: 1
+  digest: sha256:c5eca4afc4c32219b8f15a61b29a9c724257f21ea1358971ed1813d792e9dbfe
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: ui-atlas-center-api-reporter-round-research"
+discussionId: ui-atlas-center-api-reporter-round-research
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - researcher
+recipientIds:
+  - researcher
+fileRefs: []
+contextRefs: []
+sourceMessageRefs: []
+createdAt: 2026-10-19T10:24:25.546Z
+---
+@api/researcher Trace API578 (https://github.com/treeseed-ai/api/issues/578), blocking Atlas workday closeout. Ordinary read-only source research, not authority to change persisted history. Sourcef97156777e21c89ba44d223dbd012ff30da08c10, filesrc/api/capacity/services/capacity/workdays/lifecycle/living-workday-lifecycle.ts; exact numbered excerpt below. At most ONE bounded source command if needed, with a fresh successful authoritative clock before it. No edits, database writes, candidate probes or publication tools. Initial clock first; finalclock once then immediately return <=170words of findings and a precise regression/fix boundary. The configured handler publishes afterward.
+Observed normal workday4f2f94a1-13ca-47c9-9a6c-0fbaee02121e: four genuine estimating attempts completed/released, ready proposalv6, one settlement each, closed workspaces/tasks. Round1 complete; runtime-created round2 still active with four planned estimator node identities but no corresponding nodes/attempts. Scoped stop left closing, Reporter ready/unassigned. Public paginated audit at09:24:21.726Z reports reporter_workday_authority_required: original closing Workday and ended planning rounds required. Original end10:04:19.882Z is unchanged.
+Check whether the initialAgentIds fallback can repeat estimators after hasCompleteExecutablePlan becomes true. Distinguish preventing future orphan rounds from truthfully recovering this existing unadmitted round. Suggest only existing lifecycle/graph ownership; never mark unexecuted attempts completed, drop failed history, extend a deadline or relax Reporter checks. State any recovery uncertainty.
+43: async function nextPlanningParticipants(store: CapacityGovernanceDatabase, run: DurableCapacityWorkdayRun, plan: AppliedWorkday) {
+44: 	const selectedProposalIds = [...new Set(Array.isArray(run.parameters.proposalIds)
+45: 		? run.parameters.proposalIds.filter((id): id is string => typeof id === 'string' && Boolean(id)) : [])];
+46: 	const decisionIds = [...new Set(Array.isArray(run.parameters.decisionIds)
+47: 		? run.parameters.decisionIds.filter((id): id is string => typeof id === 'string' && Boolean(id)) : [])];
+48: 	const decisions = decisionIds.length ? await store.all(`SELECT id,proposal_id FROM governance_decisions
+49: 		WHERE team_id=? AND id IN (${decisionIds.map(() => '?').join(',')})`, [run.teamId, ...decisionIds]) : [];
+50: 	if (decisions.length !== decisionIds.length || decisions.some(decision => !decision.proposal_id)) {
+51: 		throw new CapacityGovernanceError('workday_planning_decision_scope_invalid',
+52: 			'Every selected decision must resolve to a proposal in this team.', 409);
+53: 	}
+54: 	// Derive scope from the existing decision records, never widen an explicit
+55: 	// decision-only workday into autonomous discovery or copy another authority.
+56: 	const scopedProposalIds = [...new Set([...selectedProposalIds, ...decisions.map(decision => String(decision.proposal_id))])];
+57: 	const selected = new Set(scopedProposalIds);
+58: 	const sources = Object.fromEntries(Object.entries(record(run.parameters.planningSourceByProposalId))
+59: 		.filter(([id]) => !selected.size || selected.has(id)));
+60: 	const proposalsByProjectId: Record<string, Row[]> = {};
+61: 	let hasPlanningProposals = false;
+62: 	const first = plan.planningRounds[0]!;
+63: 	const prefix = `planning:${plan.id}:${first.round}:`;
+64: 	const initialAgentIds = first.assignmentIds.map((id) => id.slice(prefix.length));
+65: 	const planningAgentIds = initialAgentIds.filter((id) => id.endsWith(':planning'));
+66: 	const projectIds = Array.isArray(run.parameters.scheduledProjectIds) ? run.parameters.scheduledProjectIds : [];
+67: 	for (const projectId of projectIds) {
+68: 		if (typeof projectId !== 'string') continue;
+69: 		const candidates = await store.all(`SELECT * FROM governance_proposals WHERE team_id=? AND project_id=?
+70: 			AND status IN ('draft','submitted','open','voting')
+71: 			${selected.size ? `AND id IN (${scopedProposalIds.map(() => '?').join(',')})` : ''}
+72: 			ORDER BY id LIMIT 101`, [run.teamId, projectId, ...scopedProposalIds]);
+73: 		if (candidates.length > 100) throw new Error(`planning_proposal_inventory_too_large:${projectId}`);
+74: 		hasPlanningProposals ||= candidates.length > 0;
+75: 		proposalsByProjectId[projectId] = [];
+76: 		for (const proposal of candidates) {
+77: 			try {
+78: 				const exact = await readExactProposal(store, proposal);
+79: 				const proposalId = String(exact.definition.id);
+80: 				sources[proposalId] = exact.ref;
+81: 				proposalsByProjectId[projectId].push(exact.definition);
+82: 			}
+83: 			catch (error) {
+84: 				if ((error as { code?: unknown })?.code !== 'proposal_execution_plan_invalid') throw error;
+85: 			}
+86: 		}
+87: 	}
+88: 	const proposalsNeedingEstimates = Object.fromEntries(Object.entries(proposalsByProjectId)
+89: 		.map(([projectId, proposals]) => [projectId, proposals.filter((proposal) =>
+90: 			!hasCompleteExecutablePlan(proposal) && proposal.status !== 'withdrawn')]));
+91: 	const estimators = Object.values(proposalsNeedingEstimates).some((proposals) => proposals.length)
+92: 		? workdayParticipants({ ...run.parameters, proposalsByProjectId: proposalsNeedingEstimates })
+93: 			.filter((participant) => participant.activity === 'estimating' && projectIds.includes(participant.projectId))
+94: 			.map((participant) => participant.id) : [];
+95: 	return { sources, proposalIds: selectedProposalIds.sort(),
+96: 		// Terminal explicit scope is not autonomous proposal discovery. Keep the
+97: 		// initial phase window, but do not repeat already-decided planning work.
+98: 		agentIds: selected.size && !hasPlanningProposals ? []
+99: 			: [...new Set([...(planningAgentIds.length ? planningAgentIds : initialAgentIds), ...estimators])].sort() };
+100: }
+101: 
+102: function advanceRounds(plan: AppliedWorkday, states: Map<string, string>, now: string): AppliedWorkday {
+103: 	const rounds = plan.planningRounds.map((round, index) => {
+104: 		const complete = round.assignmentIds.every((id) => terminalNodeStates.has(states.get(id) ?? ''));
+105: 		const previousComplete = index === 0 || plan.planningRounds[index - 1]?.state === 'complete'
+106: 			|| plan.planningRounds[index - 1]?.assignmentIds.every((id) => terminalNodeStates.has(states.get(id) ?? ''));
+107: 		if (complete) return { ...round, state: 'complete' as const,
+108: 			startedAt: round.startedAt ?? now, completedAt: round.completedAt ?? now };
+109: 		if (plan.state === 'active' && previousComplete) return { ...round, state: 'active' as const, startedAt: round.startedAt ?? now };
+110: 		return round;
+111: 	});
+112: 	return { ...plan, planningRounds: rounds as AppliedWorkday['planningRounds'] };
+113: }
