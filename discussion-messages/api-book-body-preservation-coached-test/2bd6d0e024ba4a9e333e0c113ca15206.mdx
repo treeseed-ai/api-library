@@ -1,0 +1,242 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: 2bd6d0e024ba4a9e333e0c113ca15206
+discussionRef:
+  store: treedx
+  model: discussion
+  id: api-book-body-preservation-coached-test
+  path: discussions/api-book-body-preservation-coached-test.mdx
+  revision: 1
+  digest: sha256:ce7823bd3c6b883a77d70871000aa9704f42028a5805ca4f37ef7a0fa82fbcc4
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: api-book-body-preservation-coached-test"
+discussionId: api-book-body-preservation-coached-test
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - tester
+recipientIds:
+  - tester
+fileRefs: []
+contextRefs: []
+sourceMessageRefs: []
+createdAt: 2026-10-19T02:26:29.830Z
+---
+@api/tester Narrowed regression proposal for API573 after failed assignment_hCl7pChxLOcd5mS0aBYzUGtu9S41ssTL. Its exact native receipt proves twelve valid clocks but no clock before command item_15 after item_14. That attempt remains failed, with no delivered test product credited.
+
+Use exactly ONE read-only shell command after your initial authoritative time-status check: git show adebc9caef11d4347f7d69014631616379c12f4f:tests/unit/control-plane/knowledge/workspaces/book-repin.test.ts . Run NO other shell commands. All other needed source is supplied below; do not rediscover paths. After reading source and designing the test, call time status as your FINAL tool action, then return your proposal with no further tools. Await each clock and preserve the original deadline. Do not test or write files. The handler publishes your normal final reply; a separate discussion-write tool is unnecessary.
+
+Return the COMPLETE updated tests/unit/control-plane/knowledge/workspaces/book-repin.test.ts in ONE typescript block, retaining the two existing cases unchanged. Add a small focused regression for legacyv2 and currentv3 metadata updates with distinctive non-empty Markdown, Unicode, trailing spaces and newlines. Check the RESULTING BODY bytes, not whether body text exists in the patch (it could be a removed line). Reuse existing utilities; do not reimplement the production diff algorithm. A disposable native Git apply round-trip of the actual emitted patch with strict finally cleanup is acceptable unit-boundary proof; label native TreeDX integration separately and do not run it here. No implementation repair, compatibility model or claimed test execution. Explain the intended expected RED on frozen APIadebc9caef11d4347f7d69014631616379c12f4f, and the existing native relation-authoring fixture extension needed later. No project-ID/revision input may override the API-owned workspace identity/next revision. Keep schema, stale version, authorization and page-repin cases intact.
+
+Observed source risk: serializeBookDraft emits a newline-only body and bookDocument supplies metadata only. Five real existing Books have non-empty bodies; no real Book write occurred. updateContent loads before bytes, derives projectId from the authorized workspace and valid current revision+1 (legacy invalid starts0). Current implementation is not safe for a body-preserving migration until a regression and bounded repair prove it.
+
+EXACT HELD SOURCE AND EXCERPTS supplied by integrator atadebc9caef11d4347f7d69014631616379c12f4f:
+
+FILE tests/unit/control-plane/knowledge/workspaces/book-repin.test.ts starting line 1
+import { describe,expect,it,vi } from 'vitest';
+import { createKnowledgeWorkspaceService } from '../../../../../src/api/control-plane/knowledge/knowledge-workspace-service.ts';
+import { managedTeamLibrarySeedFiles } from '../../../../../src/api/teams/managed-team-library-service.ts';
+import { resolveKnowledgeGatewayConnection } from '../../../../../src/api/knowledge/gateway-treedx-connection.ts';
+
+vi.mock('../../../../../src/api/knowledge/gateway-treedx-connection.ts',async(original)=>({
+	...await original<typeof import('../../../../../src/api/knowledge/gateway-treedx-connection.ts')>(),
+	resolveKnowledgeGatewayConnection:vi.fn(),
+}));
+
+describe('Book revision custody',()=>{
+	it('replaces an invalid historical Book without validating the retired source shape',async()=>{
+		const workspace={id:'draft-legacy',projectId:'project',actorUserId:'author',status:'draft',version:1,
+			treeDxWorkspaceId:'remote',baseCommitSha:'a'.repeat(40),baseRef:'staging',
+			branchName:'refs/heads/knowledge/draft-legacy',allowedPaths:['books/**','knowledge/**']};
+		const source='---\nschemaVersion: treeseed.book/v2\nid: core\nslug: core\ntitle: Core\nsummary: Legacy book\nstatus: published\nvisibility: team\norder: 0\ntopics: []\n---\n';
+		const client={readFile:vi.fn(async()=>({sha:'old-sha',content:source})),
+			listRepositoryPaths:vi.fn(async()=>({resolvedRef:'a'.repeat(40),entries:[],page:{hasMore:false}})),
+			status:vi.fn(async()=>({changes:[]})),applyChangeset:vi.fn(async()=>({applied:true}))};
+		vi.mocked(resolveKnowledgeGatewayConnection).mockResolvedValue({client,contentPath:'.',repositoryId:'repo-1'} as never);
+		const store={getKnowledgeWorkspace:vi.fn(async()=>workspace),
+			getProjectDetails:vi.fn(async()=>({project:{id:'project',teamId:'team'}})),
+			principalCanAccessTeam:vi.fn(async()=>true),
+			getTeamAccessSummary:vi.fn(async()=>({permissions:['knowledge:author']})),
+			updateKnowledgeWorkspace:vi.fn(async()=>({ok:true,workspace:{...workspace,version:2}})),
+			recordAuditEvent:vi.fn(async()=>undefined)};
+		const service=createKnowledgeWorkspaceService(store,{projectCatalog:vi.fn(async()=>({books:[],pages:[]}))});
+		await service.updateContent({id:'author'},workspace.id,{kind:'book',version:1,sourcePath:'books/core.md',
+			id:'core',slug:'core',title:'Core',summary:'Governed book',visibility:'team',order:0});
+		expect(client.applyChangeset.mock.calls[0]?.[0]?.patch).toContain('treeseed.book/v3');
+	});
+	it('repins every existing page in the same governed changeset as its Book update',async()=>{
+		const seed=managedTeamLibrarySeedFiles('project');
+		const bookPath='books/team-operations.md';
+		const pagePath='knowledge/team-operations/communication-standards.md';
+		const workspace={id:'draft-1',projectId:'project',actorUserId:'author',status:'draft',version:1,
+			treeDxWorkspaceId:'remote',baseCommitSha:'a'.repeat(40),baseRef:'staging',
+			branchName:'refs/heads/knowledge/draft-1',allowedPaths:['books/**','knowledge/**']};
+		const client={
+			readFile:vi.fn(async({path}:{path:string})=>({sha:'existing-sha',content:seed[path]})),
+			listRepositoryPaths:vi.fn(async()=>({resolvedRef:'a'.repeat(40),entries:[{path:bookPath},{path:pagePath}],page:{hasMore:false}})),
+			status:vi.fn(async()=>({changes:[]})),
+			applyChangeset:vi.fn(async(_input:{patch:string})=>({applied:true})),
+		};
+		vi.mocked(resolveKnowledgeGatewayConnection).mockResolvedValue({client,contentPath:'.',repositoryId:'repo-1'} as never);
+		const store={
+			getKnowledgeWorkspace:vi.fn(async()=>workspace),
+			getProjectDetails:vi.fn(async()=>({project:{id:'project',teamId:'team'}})),
+			principalCanAccessTeam:vi.fn(async()=>true),
+			getTeamAccessSummary:vi.fn(async()=>({permissions:['knowledge:author']})),
+			updateKnowledgeWorkspace:vi.fn(async()=>({ok:true,workspace:{...workspace,version:2}})),
+			recordAuditEvent:vi.fn(async()=>undefined),
+		};
+		const service=createKnowledgeWorkspaceService(store,{projectCatalog:vi.fn(async()=>({books:[],pages:[]}))});
+		await service.updateContent({id:'author'},workspace.id,{kind:'book',version:1,sourcePath:bookPath,
+			id:'team-operations',slug:'team-operations',title:'Team Operations',summary:'Updated team standards.',
+			visibility:'team',order:0});
+		const patch=client.applyChangeset.mock.calls[0]?.[0]?.patch ?? '';
+		expect(patch).toContain(bookPath);
+		expect(patch).toContain(pagePath);
+		expect(patch).toContain('revision: 2');
+	});
+});
+
+END SOURCE
+
+FILE src/api/knowledge/changesets/unified-diff.ts starting line 1
+export interface TextFileChange {
+	path: string;
+	before: string | null;
+	after: string | null;
+}
+
+function sharedStart(left: string[], right: string[]) {
+	let count = 0;
+	while (count < left.length && count < right.length && left[count] === right[count]) count += 1;
+	return count;
+}
+
+function sharedEnd(left: string[], right: string[], start: number) {
+	let count = 0;
+	while (count < left.length - start && count < right.length - start
+		&& left[left.length - count - 1] === right[right.length - count - 1]) count += 1;
+	return count;
+}
+
+function textFileDiff(change: TextFileChange) {
+	if (change.before === null && change.after === null) throw new Error(`Changeset path ${change.path} has no content.`);
+	if (change.before === change.after) return '';
+	const lines = (source: string | null) => source === null || source === '' ? [] : (source.endsWith('\n') ? source.slice(0, -1) : source).split('\n');
+	const before = lines(change.before);
+	const after = lines(change.after);
+	const identities = (values: string[], source: string | null) => values.map((line, index) => `${line}${index < values.length - 1 || source?.endsWith('\n') ? '\n' : ''}`);
+	const beforeIdentity = identities(before, change.before);
+	const afterIdentity = identities(after, change.after);
+	const prefix = sharedStart(beforeIdentity, afterIdentity);
+	const suffix = sharedEnd(beforeIdentity, afterIdentity, prefix);
+	const start = Math.max(0, prefix - 3);
+	const beforeEnd = before.length - Math.max(0, suffix - 3);
+	const afterEnd = after.length - Math.max(0, suffix - 3);
+	const oldSlice = before.slice(start, beforeEnd);
+	const newSlice = after.slice(start, afterEnd);
+	const leading = prefix - start;
+	const trailing = Math.min(3, suffix);
+	const marked = (line: string, marker: string, index: number, source: string | null, sourceLines: string[]) =>
+		`${marker}${line}${index === sourceLines.length - 1 && !source?.endsWith('\n') ? '\n\\ No newline at end of file' : ''}`;
+	const body = [...oldSlice.slice(0, leading).map((line, index) => marked(line, ' ', start + index, change.before, before)),
+		...oldSlice.slice(leading, oldSlice.length - trailing).map((line, index) => marked(line, '-', start + leading + index, change.before, before)),
+		...newSlice.slice(leading, newSlice.length - trailing).map((line, index) => marked(line, '+', start + leading + index, change.after, after)),
+		...newSlice.slice(newSlice.length - trailing).map((line, index) => marked(line, ' ', afterEnd - trailing + index, change.after, after))].join('\n');
+	return [`diff --git a/${change.path} b/${change.path}`,
+		...(change.before === null ? ['new file mode 100644'] : change.after === null ? ['deleted file mode 100644'] : []),
+		`--- ${change.before === null ? '/dev/null' : `a/${change.path}`}`,
+		`+++ ${change.after === null ? '/dev/null' : `b/${change.path}`}`,
+		...(oldSlice.length || newSlice.length ? [`@@ -${oldSlice.length ? start + 1 : start},${oldSlice.length} +${newSlice.length ? start + 1 : start},${newSlice.length} @@`, body] : [])].join('\n');
+}
+
+export function createUnifiedChangeset(changes: TextFileChange[]) {
+	const paths = new Set<string>();
+	for (const change of changes) {
+		if (paths.has(change.path)) throw new Error(`Duplicate changeset path: ${change.path}`);
+		paths.add(change.path);
+	}
+	const patches = changes.map(textFileDiff).filter(Boolean);
+	return patches.length ? `${patches.join('\n')}\n` : '';
+}
+
+END SOURCE
+
+FILE src/api/knowledge/changesets/apply-text-changeset.ts starting line 1
+import { createHash } from 'node:crypto';
+import { createUnifiedChangeset,type TextFileChange } from './unified-diff.ts';
+
+export async function applyTextChangeset(input: {
+	client: any;
+	workspace: { workspaceId: string; baseCommitSha: string; baseRef: string };
+	changes: TextFileChange[];
+	idempotencyKey?: string;
+}) {
+	const patch = createUnifiedChangeset(input.changes);
+	if (!patch) return;
+	const patchSha256 = createHash('sha256').update(patch).digest('hex');
+	return input.client.applyChangeset({
+		workspaceId: input.workspace.workspaceId,
+		contract: 'treedx.changeset/v1',
+		baseCommitSha: input.workspace.baseCommitSha,
+		baseRef: input.workspace.baseRef,
+		patch,
+		patchSha256,
+		idempotencyKey: input.idempotencyKey
+			?? createHash('sha256').update(`${input.workspace.workspaceId}:${patchSha256}`).digest('hex'),
+		expectedDestinationRefHead: input.workspace.baseCommitSha,
+	});
+}
+
+END SOURCE
+
+FILE src/api/knowledge/runtime/authoring.ts starting line 8
+const safeSlug = /^[a-z0-9]+(?:[/-][a-z0-9]+)*$/u;
+
+type KnowledgePageDraft = Omit<KnowledgePageDefinition, 'schemaVersion' | 'bodyHtml' | 'revision' | 'sourcePackage' | 'visibility' | 'audiences'> & { visibility: unknown; audiences: unknown };
+
+function pageFrontmatter(input: KnowledgePageDraft) {
+	return {
+		schemaVersion: KNOWLEDGE_PAGE_SCHEMA_VERSION, id: input.id, projectId: input.projectId,
+		bookRef: input.bookRef, slug: input.slug,
+		title: input.title, summary: input.summary, status: input.status, visibility: input.visibility,
+		order: input.order, ...(input.parentId ? { parentId: input.parentId } : {}), groupIds: input.groupIds,
+		contributors: input.contributors, relatedBookIds: input.relatedBookIds,
+		relatedKnowledgeIds: input.relatedKnowledgeIds, relatedNoteIds: input.relatedNoteIds,
+		relatedQuestionIds: input.relatedQuestionIds, relatedObjectiveIds: input.relatedObjectiveIds,
+		relatedProposalIds: input.relatedProposalIds, relatedDecisionIds: input.relatedDecisionIds,
+		...(input.relatedRefs?.length ? { relatedRefs: input.relatedRefs } : {}),
+		guaranteeIds: input.guaranteeIds,
+		audiences: input.audiences,
+		capabilityIds: input.context.capabilityIds, routePatterns: input.context.routePatterns,
+		resourceTypes: input.context.resourceTypes, actionIds: input.context.actionIds,
+		keywords: input.context.keywords, documentationUrls: input.context.documentationUrls,
+	};
+}
+
+export function serializeKnowledgePageDraft(input: KnowledgePageDraft): string {
+	if (!safeSlug.test(input.slug)) throw new Error('The knowledge page slug is invalid.');
+	const raw = serializeFrontmatterDocument(pageFrontmatter(input), `\n${validateKnowledgeMarkdown(input.bodyMarkdown)}\n`);
+	parseKnowledgePage({ path: `${input.slug}.md`, raw });
+	return raw;
+}
+
+export function serializeBookDraft(input: Omit<BookDefinition, 'schemaVersion' | 'visibility' | 'packPolicy'> & { visibility: unknown; packPolicy: unknown }): string {
+	if (!safeSlug.test(input.slug)) throw new Error('The book slug is invalid.');
+	const coverImage = input.cover?.image?.trim();
+	if (coverImage && (!coverImage.startsWith('/') || coverImage.includes('..') || /[?#]/u.test(coverImage))) {
+		throw new Error('Book covers must use a safe root-relative project asset path.');
+	}
+	const { sourceDigest: _derivedDigest, sourcePath: _derivedPath, ...content } = input;
+	const raw = serializeFrontmatterDocument({ schemaVersion: BOOK_SCHEMA_VERSION, ...content }, '\n');
+	parseBook({ path: `${input.slug}.md`, raw });
+	return raw;
+}
+
+END SOURCE
+
+Existing native boundary: tests/unit/control-plane/knowledge/workspaces/architecture/relation-authoring-native.test.ts / relationAuthoringDatabase(true), real TreeDX and PostgreSQL. No controlled reply or PGlite substitution for that required native proof.
