@@ -1,0 +1,137 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: 5010f75657e92ca2de35e1a907f53be2
+discussionRef:
+  store: treedx
+  model: discussion
+  id: ui-atlas-center-api-reporter-recovery-architecture-correction
+  path: discussions/ui-atlas-center-api-reporter-recovery-architecture-correction.mdx
+  revision: 1
+  digest: sha256:a90164bb83e5256f8336291acc0fb902d06653bcab1a1d1fcc67d287ee1fad2f
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: ui-atlas-center-api-reporter-recovery-architecture-correction"
+discussionId: ui-atlas-center-api-reporter-recovery-architecture-correction
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - architect
+recipientIds:
+  - architect
+fileRefs: []
+contextRefs: []
+sourceMessageRefs: []
+createdAt: 2026-10-19T11:08:41.821Z
+---
+@api/architect Correct your published producte951ecedd64c4bc6751676c48bd10195ad7322ae from assignment_CFKfDuvreDR4XYuo8WndGoJEUb4WaO4a. Its substantive candidate was cautious, but the wrapper falsely claimed no durable response was published. Actual public read-back proves this exact response was published by the handler and settled once17seconds. The predecessor read denial was real and remains retained; no broader grant is requested. The exact Researcher content below is supplied from a separately verified public read, with SHA2560bee9bd5db634f418b37dc9bbed255908e83b211c7ea0e4e17d5ab4e8ad9dfc8. Treat it as supplied evidence; do not repeat the denied read. New governed chat revisionac6388d2b5e30ef159dd466dbc297718960bb53c clarifies handler publication and per-read clock custody. Return only a corrected substantive recovery assessment <=170words, stating what must be proved and truthful limitations. No commands/content tools needed; initialclock, suppliedbytesinspection, finalclock, answer. No implementation or passing recovery claim.
+Exact Researcher product:
+In `nextPlanningParticipants`, completed executable plans produce no estimators, but the fallback at line 99 can still reselect `initialAgentIds` when the first round has no `:planning` agents. That can schedule estimators again after their work is complete. Keep only actual planning participants from the initial round and add estimators only for proposals still needing estimates. This prevents future orphan estimator rounds while preserving explicit scope.
+
+For this workday, round 2 has planned identities but no nodes or attempts. The source does not establish a safe way to recover that persisted round. Use lifecycle and graph ownership to reconcile only what the state model supports; do not fabricate completed attempts or bypass Reporter’s authority checks. If the lifecycle cannot truthfully account for those identities, closeout remains unresolved pending an authorized recovery path.
+
+Source: [`living-workday-lifecycle.ts` at f97156777e21c89ba44d223dbd012ff30da08c10](https://github.com/treeseed-ai/api/blob/f97156777e21c89ba44d223dbd012ff30da08c10/src/api/capacity/services/capacity/workdays/lifecycle/living-workday-lifecycle.ts)
+
+Original bounded task/source:
+ Consume actual API Researcher product3bb4eeb621628b1524be81f05734fa9ceec85c99 (discussion-messages/ui-atlas-center-api-reporter-round-research/response-0c595e38345cd125b86fc6d7.mdx). API578/SDK429. Researcher confirms future nextPlanningParticipants must not reselect initial estimators after estimates finish. Integrator reproduced38pass/2intendedRED, then40green with estimator fallback removed; not deployed.
+Unresolved: stopped simulation workday4f2f94a1-13ca-47c9-9a6c-0fbaee02121e has original round1 four completed genuine estimating nodes/settlements, round2 declared four estimator IDs but NO round2nodes/attempts; planclosing, originaldeadline10:04:19.882Z nowpast. Publicaudit reporter_workday_authority_required: Reporter requires original closing Workday and ended planning rounds. advanceRounds marks complete only when every declared ID has actual terminal node. Persistence forbids dropping round IDs/rewriting membership; Reporter verifies original closing history. Current projector uses workdayParticipants, which omits estimators once estimates exist.
+Propose the smallest recovery at EXISTING graph/lifecycle owners, <=200words, grounded in supplied exact code and Researcher uncertainty. Evaluate whether canonical cancelled NEVER-ADMITTED planned nodes can be projected from original frozen agent profiles and exact proposal source without creating attempts/results/usage or altering issued authority; preserve every actual completed node/ref/history and unrelated work. If source cannot justify it, state the precise missing proof. Never fabricate completed turns, manually write production persistence, loosen Reporter checks, rewrite deadlines, or introduce another runner/model/recoverydatabase. Read-only communication research, not implementation approval. Candidate sourcef971is attached; excerpts sufficient, at mostONEbounded source command if needed, authoritative clock immediately BEFORE that command, finalclockthenanswer. No builds/edits/publication tools; handlerpublishes.
+src/api/capacity/policy/execution/workday-participants.ts
+42: 			const frozenActivities = array(entry.activities).map(text).filter(Boolean) as Activity[];
+43: 			const activities = (explicitActivitySelection ? frozenActivities : frozenActivities.filter((activity) =>
+44: 				activity === 'planning' || activity === 'estimating'))
+45: 				.filter((activity): activity is 'planning' | 'estimating' => activity === 'planning' || activity === 'estimating');
+46: 			for (const activity of activities) {
+47: 				if (!validation.data.activityProfiles[activity]) continue;
+48: 				if (activity === 'planning') participants.push({ projectId, definition: validation.data,
+49: 					activity, id: `${projectId}/${validation.data.id}:planning` });
+50: 				else for (const proposalValue of array(record(parameters.proposalsByProjectId)[projectId])) {
+51: 					const proposal = record(proposalValue);
+52: 					const proposalId = text(proposal.id);
+53: 					const items = array(record(proposal.executionPlan).workItems).map(record);
+54: 					const canEstimate = items.some(item => text(item.agentClass) === validation.data!.agentClass
+55: 						&& Object.keys(record(item.estimate)).length === 0)
+56: 						|| (validation.data.agentClass === 'reviewer' && items.some(item => item.review === 'required'
+57: 							&& Object.keys(record(item.reviewEstimate)).length === 0));
+58: 					if (proposalId && canEstimate) participants.push({ projectId, proposalId,
+59: 						definition: validation.data, activity, id: `${projectId}/${validation.data.id}:estimating:${proposalKey(proposalId)}` });
+60: 				}
+61: 			}
+62: 		}
+63: 	}
+64: 	return participants.sort((left, right) => left.id.localeCompare(right.id));
+65: }
+66: 
+
+src/api/capacity/policy/execution/workday-execution-projector.ts
+81: 		for (const { round } of workday.planningRounds) {
+82: 			const plannedIds = new Set(workday.planningRounds.find((candidate) => candidate.round === round)?.assignmentIds ?? []);
+83: 			const current: ExecutionNode[] = [];
+84: 			for (const participant of participants.filter((candidate) => projectIds.includes(candidate.projectId))) {
+85: 				const { projectId, definition, activity } = participant;
+86: 				const planningSource = record(planningSources[participant.proposalId ?? '']);
+87: 				const nodeSource = activity === 'estimating' && planningSource.store === 'treedx'
+88: 					&& planningSource.model === 'proposal' ? planningSource as ExactEntityReference : reference;
+89: 				const plannedId = `planning:${workday.id}:${round}:${participant.id}`;
+90: 				if (!plannedIds.has(plannedId)) continue;
+91: 				const profile = definition.activityProfiles[activity]!;
+92: 				const proposal = source.proposalsByProjectId?.[projectId]?.find((candidate) => text(candidate.id) === participant.proposalId);
+93: 				const workItems = array(record(proposal?.executionPlan).workItems).map(record);
+94: 				const workItem = activity === 'estimating' && definition.agentClass !== 'reviewer'
+95: 					? workItems.filter((item) => text(item.agentClass) === definition.agentClass
+96: 						&& Object.keys(record(item.estimate)).length === 0) : [];
+97: 				if (activity === 'estimating' && (!workItems.length
+98: 					|| (definition.agentClass !== 'reviewer' && !workItem.length))) throw new Error(
+99: 					`Estimating ${definition.agentClass} requires proposal work items owned by that class.`);
+100: 				const estimatingCriteria = definition.agentClass === 'reviewer'
+101: 					? workItems.filter((item) => item.review === 'required'
+102: 						&& Object.keys(record(item.reviewEstimate)).length === 0).map((item) =>
+103: 						`Estimate the generated review of work item ${text(item.id)} independently: expectedSeconds, maximumSeconds, and rationale.`)
+104: 					: workItem.flatMap((item) => [`Estimate work item ${text(item.id)}: expectedSeconds, maximumSeconds, and rationale.`,
+105: 						...array(item.acceptanceCriteria).map(text)]);
+106: 				const proposalStatus = source.proposalStatusesByProposalId?.[participant.proposalId ?? ''];
+107: 				const node = executionNodeSchema.parse({ schemaVersion: 'treeseed.execution-node/v1', id: plannedId,
+108: 					teamId: input.teamId, projectId, workdayId: workday.id, kind: activity, pairRole: null,
+109: 					...(activity === 'estimating' && definition.agentClass !== 'reviewer' && workItem.length === 1
+110: 						? { workItemId: text(workItem[0]?.id) } : {}),
+111: 					sourceRef: nodeSource, authorityRefs: [reference], ruleRevision: 1, nodeRevision: 1,
+112: 						agentClass: definition.agentClass,
+113: 					status: activity === 'estimating' && proposalStatus
+114: 						&& !['draft', 'submitted', 'open'].includes(proposalStatus)
+115: 						? 'cancelled' : 'blocked',
+116: 					estimate: modelTurnEstimate(workday.policySnapshot.planningTurnMaximumSeconds),
+117: 					requiredCapabilities: [capability(activity)], requestedPermissions: profile.permissions,
+118: 					workspace: 'treedx', acceptanceCriteria: activity === 'estimating' ? estimatingCriteria
+119: 						: [`Return the governed ${activity} contribution within the assigned round.`],
+120: 					graphRevisionCreated: input.revision, graphRevisionUpdated: input.revision });
+121: 				lifecycleDependencies(node, profile.dependsOn?.events);
+122: 				current.push(node); nodes.push(node);
+123: 			}
+124: 			roundNodes.set(round, current);
+125: 		}
+126: 		for (const [round, current] of roundNodes) {
+127: 			for (const estimator of current.filter(node => node.kind === 'estimating')) {
+128: 				// Estimate after this agent's own contribution. Other agents' planning
+129: 				// turns are independent; their explicit profile dependencies still apply.
+130: 				const participant = participants.find(value => value.activity === 'estimating'
+131: 					&& estimator.id === `planning:${workday.id}:${round}:${value.id}`);
+132: 				const ownContribution = participant && current.find(node =>
+
+src/api/capacity/repositories/capacity/workdays/workday-run-write.ts
+35:    await database.run('SELECT id FROM capacity_workday_runs WHERE id=? AND team_id=? FOR UPDATE',[value.id,value.teamId]);
+36:    const reads=new CapacityWorkdayRunRepository(database),before=await reads.get(value.teamId,value.id);
+37:    if(!before||before.status!==expectedStatus)return null;
+38:    const previous=before.parameters.appliedPlan===undefined?null:appliedWorkdaySchema.parse(before.parameters.appliedPlan);
+39:    const proposed=value.parameters.appliedPlan===undefined?null:appliedWorkdaySchema.parse(value.parameters.appliedPlan);
+40:    if(value.executionMode!==before.executionMode||(proposed&&(proposed.id!==value.id||proposed.teamId!==value.teamId||proposed.executionMode!==value.executionMode)))throw new CapacityGovernanceError('workday_transition_stale','Workday transition requires its original sole mode and exact owning identity.',409);
+41:    if(previous){
+42:     const states=['planned','active','closing','ended'];
+43:     if(!proposed||states.indexOf(proposed.state)<states.indexOf(previous.state)
+44:      ||['id','teamId','executionMode','startsAt','endsAt','policyId','policyRevision','policySnapshot'].some(field=>!isDeepStrictEqual(Reflect.get(previous,field),Reflect.get(proposed,field)))
+45:      ||previous.planningRounds.some((round,index)=>{
+46:       const next=proposed.planningRounds[index];return !next||round.round!==next.round||!isDeepStrictEqual(round.assignmentIds,next.assignmentIds)
+47:        ||['pending','active','complete'].indexOf(next.state)<['pending','active','complete'].indexOf(round.state)
+48:        ||['startedAt','completedAt'].some(field=>Reflect.get(round,field)!==undefined&&Reflect.get(round,field)!==Reflect.get(next,field));
+49:      })
