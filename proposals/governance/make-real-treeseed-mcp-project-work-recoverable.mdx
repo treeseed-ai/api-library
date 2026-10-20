@@ -3,45 +3,62 @@ schemaVersion: treeseed.proposal/v1
 id: 46a2982b-7427-4ef0-8583-c5f4843063aa
 projectId: b371c2ba-c9f3-41f0-b249-eb084ef9e610
 title: Make real TreeSeed MCP project work recoverable
-request: "Repair TreeSeed API MCP mutations so an external coordinator can send
-  meaningful project work once, recover the same request after a dropped
-  response, and preserve write-version preconditions. Trace the existing HTTP
-  request metadata before adding any new envelope. Prove authorization, missing
-  identity denial, unchanged retry, changed-request conflict, and stale version
-  rejection through existing native protocol and owning backend tests. This
-  advances the API core objective and SDK #429 chunk 1. Keep the existing
-  backend, scope, deadlines, original failed observations, and simulation
-  isolation. Participant execution estimates remain absent. Prior research-only
-  prose estimates are retained in the discussion and do not grant acting
-  authority. Review the integrator candidate in API PR581 before approval;
-  complete native verification and actual MCP recovery remain pending. Proposed
-  API candidate citation is treeseed-ai/api at
-  d50ba3320d7e345c761ded92d94a58cf3115238b. This citation does not change a chat
-  sandbox checkout grant. Implementation files are byte-identical to
-  independently supplied diff head 4f4130e6d7198cb2be45d22755ed3d4db410efdb; the
-  final commit adds native tests of the review claims. The original design base
-  is retained in proposal v1. No production publication or alternate scheduler
-  is authorized. A real same-key SDK replay succeeded while proposal v1 was
-  unchanged, but after version 2 it returned
-  discussion_invocation_idempotency_conflict. Retain the original task/result
-  and fix derived live-context drift before claiming durable workflow recovery.
-  No simulated release is proved."
-summary: Enable reliable coordinator-directed project work through the same
-  governed API backend used by SDK and CLI.
+request: >-
+  The transport and retry-recovery slice is delivered through API PR581, PR582,
+  PR583 and SDK PR430. API staging source
+  03632d96890231b806d2f8c3046244682bbfd576 passed complete native verification,
+  publication run 39339097910, and real authenticated SDK/CLI/MCP recovery of
+  the original request after proposal edits. Original invocation, assignment,
+  frozen v1 context, results, events and settlement remain unchanged; all139
+  live MCP tool schemas compile. Earlier failures and proposal versions remain
+  evidence. This is development code adoption, not a completed
+  objective-to-release guarantee.
+
+
+  The next bounded product is truthful proposal participation and estimate
+  readiness. Current API governance-proposal-readiness.ts unconditionally
+  returns empty missingParticipantEstimates and missingReviewerClasses,
+  participationVersionReady=true, authorIndependent=true, and estimateCount as a
+  binary execution-plan flag. The coordinator therefore cannot use those fields
+  to explain who still owes work. Have the configured API Architect, required
+  work owners and independent Reviewer discuss the smallest complete repair
+  using the existing proposal, executionPlan workItems, governed profiles,
+  canonical assignments/results and integration evidence. Keep one readiness
+  authority and the existing backend; do not add a participant snapshot store,
+  scheduler or fake completion.
+
+
+  First produce a small class-owned execution plan grounded in the exact source
+  and real evidence. Then obtain genuine structured owner and independent review
+  estimates through the existing estimating handler and scheduler. Separate
+  discussion findings, estimates, independent product review and approval.
+  Preserve static source/work-item authority during estimating; reject stale,
+  missing or foreign contributions according to the existing contracts. A
+  participation not-applicable rationale must not replace an executable owner's
+  estimate. The bound engineering-team content is currently an ontology/topic
+  group without declared membership; do not invent membership or claim automatic
+  group participation.
+
+
+  Use API source 03632d96890231b806d2f8c3046244682bbfd576 for current analysis.
+  PR580 separately repairs obsolete estimating-round and original
+  measured-closeout custody and prepares unique rc113 release identity; it
+  remains a checked-adoption prerequisite for a new estimating workday. Final
+  execution source must be refreshed to its verified adopted protected merge
+  before estimating begins. Keep the original proposal identity, meaningful API
+  core objective, simulation isolation, deadlines, review gates and failed
+  observations. No approval, acting assignment, upstream publication permission
+  or estimate is supplied by this draft.
+summary: Complete reliable coordinator-directed project work through the shared
+  backend, with truthful required-participant and estimate readiness before
+  approval.
 status: discussing
-objectiveRefs:
-  - store: treedx
-    model: objective
-    id: api-core
-    repository: repo_be2b46a14c729f0e
-    commit: ac6388d2b5e30ef159dd466dbc297718960bb53c
-    path: objectives/core.md
 evidenceRefs:
   - store: git
     model: repository
     id: treeseed-ai/api
     repository: treeseed-ai/api
-    commit: d50ba3320d7e345c761ded92d94a58cf3115238b
+    commit: 03632d96890231b806d2f8c3046244682bbfd576
   - store: url
     model: issue
     id: sdk-429
@@ -50,4 +67,20 @@ evidenceRefs:
     model: pull-request
     id: api-581
     url: https://github.com/treeseed-ai/api/pull/581
+  - store: url
+    model: pull-request
+    id: api-582
+    url: https://github.com/treeseed-ai/api/pull/582
+  - store: url
+    model: pull-request
+    id: api-583
+    url: https://github.com/treeseed-ai/api/pull/583
+  - store: url
+    model: pull-request
+    id: sdk-430
+    url: https://github.com/treeseed-ai/sdk/pull/430
+  - store: url
+    model: pull-request
+    id: api-580
+    url: https://github.com/treeseed-ai/api/pull/580
 ---
