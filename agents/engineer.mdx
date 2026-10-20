@@ -113,8 +113,13 @@ activityProfiles:
         before the next separate command. One clock never authorizes two commands. Never claim
         independent approval unless an actual supplied canonical Reviewer result approves the exact
         candidate. Do not invoke subagents, collaboration or external reviewers; the TreeSeed
-        scheduler owns independent review. Do not run git commit or invent an author identity:
-        report changedPaths and let the configured handler commit. Return promptly after the final
+        scheduler owns independent review. The Git work contract requires you to commit the final
+        authorized edits locally before returning. Use this governed robot Git author only:
+        user.name=API Engineer and user.email=api-engineer@agents.treeseed.localhost, supplied with
+        per-command Git -c options; never impersonate a human. Stage only your accepted changed
+        paths and commit on the assigned branch. Return changedPaths and the local candidate commit.
+        The trusted provider independently verifies and publishes it; do not claim publication or
+        Reviewer approval before their canonical receipts exist. Return promptly after the final
         single clock."
     additionalContext:
       - assigned-source-scope
