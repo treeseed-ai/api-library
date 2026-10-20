@@ -1,0 +1,41 @@
+---
+schemaVersion: treeseed.discussion-message/v1
+id: 344b24b0d281a6663cb15a9f32ad95a0
+discussionRef:
+  store: treedx
+  model: discussion
+  id: mcp-coordination
+  path: discussions/mcp-coordination.mdx
+  revision: 1
+  digest: sha256:b0b531444af946bfdcd2627752294f29cebb1d9d84be00fe8c466d4d7a6489bd
+authorRef:
+  store: postgresql
+  model: user
+  id: 49435480-41fe-4fae-b2f7-baceacea562a
+title: "Adrian Webb: mcp-coordination"
+discussionId: mcp-coordination
+authorId: 49435480-41fe-4fae-b2f7-baceacea562a
+authorType: user
+intent: discuss
+mentionedAgents:
+  - architect
+recipientIds:
+  - architect
+fileRefs: []
+contextRefs:
+  - kind: proposal
+    id: 46a2982b-7427-4ef0-8583-c5f4843063aa
+    projectId: b371c2ba-c9f3-41f0-b249-eb084ef9e610
+    immutableRef: 60f47f37bcc72551453d9715a0d246c620c97053
+    path: proposals/governance/make-real-treeseed-mcp-project-work-recoverable.mdx
+    digest: sha256:3d6954ec5804b0e3b38c19793bf122b598e3792066e5f0c532fb007c43c2fa18
+sourceMessageRefs: []
+createdAt: 2026-10-20T00:39:02.308Z
+---
+@api/architect Please give a concise architecture contribution to real proposal46a2982b-7427-4ef0-8583-c5f4843063aa v5 (TreeDX60f47f37bcc72551453d9715a0d246c620c97053), toward an executable plan for truthful proposal participation and estimates. This is meaningful remaining API work; prior MCP transport/retry repairs are delivered, not new work to estimate.
+
+Supplied exact evidence from checked API staging03632d96890231b806d2f8c3046244682bbfd576, src/api/store/governance/policy/contracts/governance-proposal-readiness.ts: readiness counts independent current-version support/concern events, checks exact proposal content/complete executable plan and unresolved blockers, but returns estimateCount:executionPlanReady?1:0, missingParticipantEstimates:[], missingReviewerClasses:[], participationVersionReady:true, authorIndependent:true unconditionally. The real proposal has no executionPlan/estimates yet. Group engineering-team currently has ontology/topic classification only, no declared membership. Use actual proposal work-item classes/profile bindings, not invented group members. Existing SDK/API/CLI/MCP must share this backend calculation; no new status store or scheduler.
+
+Recommend the smallest useful API slice, real required contributors, dependency order, concrete outputs and unit/native-integration/component-scene acceptance. Distinguish facts supported by this supplied excerpt from questions requiring further source review. Do not fabricate numeric estimates, approval, membership, or tests. Consider Tester regression→Engineer repair and independent Reviewer; is additional Architect acting work actually necessary? Architect has no existing canonical Book here. Prefer no artificial work item solely to satisfy a role dependency.
+
+Use only supplied evidence for this bounded discussion. Initial authoritative clock, then final clock immediately before returning your ≤180-word substantive answer. No source reads or commands are needed. The handler publishes your response. This is an architecture proposal, not approval or execution.
