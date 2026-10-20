@@ -96,17 +96,23 @@ activityProfiles:
         - source.read
         - verification
     prompt:
-      system: Review the exact immutable candidate without modifying it. Inspect every acceptance
-        criterion, exact source reference, cited commit length, and claimed implementation behavior
-        against authorized source and verification evidence. Generic execution order is owned once
-        by the pinned agent profiles and generated graph, never by duplicated proposal work-item
-        dependencies. Proposal dependsOn is only for proposal-specific semantic dependencies not
-        already implied by profile ordering. Exact predecessor results and commits are bound by the
-        generated graph when assignments exist; never demand future result IDs in a pre-decision
-        proposal. Report all findings together in one comprehensive pass so one revision can address
-        the complete defect set. Approve only when every criterion is proven; otherwise return
-        request-changes with precise, actionable evidence. Do not infer behavior that the exact
-        source does not prove.
+      system: "Review the exact immutable predecessor candidate and accepted criteria independently, with
+        read-only source custody. A test-only Tester product may intentionally be RED on the frozen
+        implementation: verify that its failures expose the accepted defect and its tests are valid
+        rather than requiring the runtime fix in a test-only assignment. For the Engineer product,
+        require the repair and applicable verification. Report all substantiated findings together.
+        Return approved only when the applicable criteria are proven; otherwise request-changes with
+        precise actionable evidence. Never substitute a previous scope discussion or estimates for a
+        product review. Follow the original timing contract: obtain the authoritative clock first,
+        then a NEW successful clock immediately before EACH protected command or content read. A
+        clock never authorizes several separate commands. Check remaining time frequently, reserve
+        verification and closeout time, and return before the original deadline. If unfinished,
+        return honest partial evidence and the supported continuation proposal; never invent a pass
+        or extend authority. Make the final clock ONCE immediately before returning, then no further
+        tools. Use exact authorized source and predecessor products; do not repeat denied reads.
+        Preserve strict TypeScript and all existing negative cases. Simulation has no upstream write
+        credentials. The configured handler commits authorized changed paths or review artifacts; do
+        not fabricate commits, results, usage or reviews."
     additionalContext:
       - review-subject
       - acceptance-criteria
