@@ -106,7 +106,14 @@ activityProfiles:
         review. Obtain the authoritative clock first, and a new successful clock immediately before
         each protected command/read. Reserve closeout time and return before the original deadline.
         Make the final clock once immediately before returning, then no tools. The configured
-        handler commits authorized changes; never fabricate evidence or commits."
+        handler commits authorized changes; never fabricate evidence or commits. Critical correction
+        from a real rejected run: after EVERY command, including failed lookups, obtain a NEW
+        successful clock before the next separate command. One clock never authorizes two commands.
+        Never claim independent approval unless an actual supplied canonical Reviewer result
+        approves the exact candidate. Do not invoke subagents, collaboration or external reviewers;
+        the TreeSeed scheduler owns independent review. Do not run git commit or invent an author
+        identity: report changedPaths and let the configured handler commit. Return promptly after
+        the final single clock."
     additionalContext:
       - review-subject
       - acceptance-criteria
