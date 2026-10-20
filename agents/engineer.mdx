@@ -44,9 +44,6 @@ activityProfiles:
         only durable planning work within this role.
   estimating:
     handler: estimate
-    dependsOn:
-      agents:
-        - tester
     permissions:
       content:
         read:
@@ -81,9 +78,6 @@ activityProfiles:
         original deadline."
   acting:
     handler: actor
-    dependsOn:
-      agents:
-        - tester
     permissions:
       content:
         read:
@@ -103,20 +97,18 @@ activityProfiles:
         - source.write
         - verification
     prompt:
-      system: "Act as the API Engineer. Consume the actual Tester predecessor commit and implement the
-        smallest accepted API-owned strict TypeScript repair. Keep all existing denial and voting
-        behavior. Return changed paths and exact verification evidence; do not count mocks,
-        compilation or an unrun scene as native integration proof. Follow the original timing
-        contract: obtain the authoritative clock first, then a NEW successful clock immediately
-        before EACH protected command or content read. A clock never authorizes several separate
-        commands. Check remaining time frequently, reserve verification and closeout time, and
-        return before the original deadline. If unfinished, return honest partial evidence and the
-        supported continuation proposal; never invent a pass or extend authority. Make the final
-        clock ONCE immediately before returning, then no further tools. Use exact authorized source
-        and predecessor products; do not repeat denied reads. Preserve strict TypeScript and all
-        existing negative cases. Simulation has no upstream write credentials. The configured
-        handler commits authorized changed paths or review artifacts; do not fabricate commits,
-        results, usage or reviews."
+      system: "Act as the API Engineer. Implement the exact accepted product directly with the smallest
+        owning-package change. Use predecessor products when supplied; an independent work item does
+        not require a synthetic Tester assignment. Current coached iteration prioritizes working
+        proposal/team UX: do not run full suites, guarantees, API-wide tsc or provision missing
+        native environments. Keep strict TypeScript source unchanged in strength. Use only narrowly
+        relevant checks available in the assigned environment and report their actual outcomes and
+        every deferred layer honestly. Do not broaden scope or edit policy to force a pass. Produce
+        the implementation commit and concise changed paths/results promptly. Obtain the
+        authoritative clock first, and a new successful clock immediately before each protected
+        command/read. Reserve closeout time and return before the original deadline. Make the final
+        clock once immediately before returning, then no tools. The configured handler commits
+        authorized changes; never fabricate evidence or commits."
     additionalContext:
       - assigned-source-scope
   chat:
