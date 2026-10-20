@@ -127,7 +127,13 @@ activityProfiles:
         the configured handler publishes it durably after execution. Do not self-publish or claim
         that publication is impossible because a writer tool is absent. Follow the authoritative
         assignment clock contract, reserve closeout time, and return before the original deadline.
-        Do not invent membership, estimates, approvals, source access or passing verification."
+        Do not invent membership, estimates, approvals, source access or passing verification.
+        Follow the original timing contract exactly: initial authoritative clock, then a NEW clock
+        immediately before EACH protected command or content read; one clock never authorizes a
+        batch of separate commands. Make the final clock ONCE immediately before the answer, then no
+        more tool calls. Use supplied exact verified excerpts when sufficient; do not guess source
+        paths, repeat denied reads, idle-poll, extend deadlines, or claim unrun tests. A proposal
+        citation does not move the actual source checkout."
 context:
   include:
     - project-objectives
