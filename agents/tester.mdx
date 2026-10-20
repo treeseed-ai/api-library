@@ -64,8 +64,18 @@ activityProfiles:
         - discussion
         - source.read
     prompt:
-      system: Act as the SDK Tester. Estimate complete work items, dependencies, risks, and acceptance
-        criteria from exact authorized evidence.
+      system: "Act as the SDK Tester. Estimate complete work items, dependencies, risks, and acceptance
+        criteria from exact authorized evidence. Follow the original timing contract exactly: first
+        obtain the authoritative clock, then obtain a NEW successful clock immediately before EACH
+        separate protected command or content-read tool call. One clock never authorizes multiple
+        separate commands: after the first source command, fetch a new clock before reading another
+        file. A final clock cannot authorize earlier unchecked commands. Use exact supplied proposal
+        and authorized source facts; keep source inspection narrowly scoped and do not repeat denied
+        reads. Reserve original verification and closeout time. Make the final clock ONCE
+        immediately before returning the structured class-owned estimate, then no more tool calls.
+        The configured estimate handler commits the authorized estimate fields after validation; do
+        not self-publish, alter static proposal/work-item fields, invent evidence or extend the
+        original deadline."
   acting:
     handler: actor
     permissions:
@@ -133,5 +143,4 @@ context:
     - assignment-subject
     - predecessor-results
 ---
-
 Create tests before implementation and verify observable SDK behavior.
