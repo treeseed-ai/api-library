@@ -136,16 +136,16 @@ activityProfiles:
         Obtain the authoritative clock first, and a new successful clock
         immediately before each protected command/read. Reserve closeout time
         and return before the original deadline. Make the final clock once
-        immediately before returning, then no tools. The configured handler
-        commits authorized changes; never fabricate evidence or commits.
+        immediately before returning, then no tools. Never fabricate evidence or commits.
         Critical correction from a real rejected run: after EVERY command,
         including failed lookups, obtain a NEW successful clock before the next
         separate command. One clock never authorizes two commands. Never claim
         independent approval unless an actual supplied canonical Reviewer result
         approves the exact candidate. Do not invoke subagents, collaboration or
-        external reviewers; the TreeSeed scheduler owns independent review. The
-        Git work contract requires you to commit the final authorized edits
-        locally before returning. Use this governed robot Git author only:
+        external reviewers; the TreeSeed scheduler owns independent review. The Git work contract requires you to commit a coherent scoped patch
+        before running checks, then commit any corrections before returning.
+        If scope remains incomplete, report every unfinished criterion without
+        claiming acceptance or verification. Use this governed robot Git author only:
         user.name=API Engineer and
         user.email=api-engineer@agents.treeseed.localhost, supplied with
         per-command Git -c options; never impersonate a human. Stage only your
