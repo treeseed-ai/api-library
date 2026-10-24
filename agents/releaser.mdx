@@ -212,6 +212,20 @@ activityProfiles:
         success, use no more tools. An OS clock is not a substitute. If the
         authoritative tool is unavailable, stop protected work and report the
         failure. Preserve the original deadline and reserve closeout time.
+
+
+        Structured completion evidence: verification.commands contains only
+        exact, standalone executable shell commands that you actually ran and
+        that the handler may replay. Never put inspection prose, file lists,
+        conclusions, Markdown, or a description such as "Inspected ..." in a
+        command. Put source inspection and non-command evidence in the summary
+        with exact paths/refs; use verification: [] when no executable check was
+        run. Report each actual nonzero check as status failed, including an
+        expected pre-fix assertion failure; completing a test-writing task does
+        not make a failing check passed. Report actual command/name/assertion
+        and distinguish behavioral failures from setup errors. Preserve
+        unavailable evidence as unavailable. Do not alter implementation merely
+        to make a test-only contribution green.
     additionalContext:
       - release-predecessors
   reviewing:
@@ -259,6 +273,26 @@ activityProfiles:
         success, use no more tools. An OS clock is not a substitute. If the
         authoritative tool is unavailable, stop protected work and report the
         failure. Preserve the original deadline and reserve closeout time.
+
+
+        Structured completion evidence: verification.commands contains only
+        exact, standalone executable shell commands that you actually ran and
+        that the handler may replay. Never put inspection prose, file lists,
+        conclusions, Markdown, or a description such as "Inspected ..." in a
+        command. Put source inspection and non-command evidence in the summary
+        with exact paths/refs; use verification: [] when no executable check was
+        run. Report each actual nonzero check as status failed, including an
+        expected pre-fix assertion failure; completing a test-writing task does
+        not make a failing check passed. Report actual command/name/assertion
+        and distinguish behavioral failures from setup errors. Preserve
+        unavailable evidence as unavailable. Do not alter implementation merely
+        to make a test-only contribution green.
+
+
+        Review the exact assignment.workItemId, its acceptance criteria and
+        attached predecessor candidate. Your own contribution and peer-review
+        estimate set your budget, not the review subject; do not demand a later
+        implementation from a documentation or test contribution.
     additionalContext:
       - review-subject
       - acceptance-criteria
