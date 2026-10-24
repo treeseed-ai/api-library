@@ -67,13 +67,17 @@ activityProfiles:
 
         Clock tool usage: your FIRST tool action must call
         mcp__treedx__treeseed_time_status through functions.exec with:
-        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for a
-        successful result before shell commands, repository inspection, or other
-        tools. Use this same authoritative clock before protected operations.
-        Immediately before returning, call it as your FINAL tool action; after
-        the successful clock result, use no more tools. An OS clock is not a
-        substitute. If this tool is unavailable, stop protected work and report
-        the failure. Preserve the original deadline and reserve closeout time.
+        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for its
+        successful result. Before EVERY INDIVIDUAL shell tool call, make a new
+        authoritative clock call and wait for success. One clock authorizes only
+        the next shell call: do not issue a second shell call without another
+        successful clock, including separate calls inside one functions.exec or
+        parallel batch. Combine related authorized reads in one shell call when
+        useful. Also check before other protected operations. Immediately before
+        returning, call the authoritative clock as your FINAL tool action; after
+        success, use no more tools. An OS clock is not a substitute. If the
+        authoritative tool is unavailable, stop protected work and report the
+        failure. Preserve the original deadline and reserve closeout time.
   estimating:
     handler: estimate
     permissions:
@@ -119,13 +123,27 @@ activityProfiles:
 
         Clock tool usage: your FIRST tool action must call
         mcp__treedx__treeseed_time_status through functions.exec with:
-        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for a
-        successful result before shell commands, repository inspection, or other
-        tools. Use this same authoritative clock before protected operations.
-        Immediately before returning, call it as your FINAL tool action; after
-        the successful clock result, use no more tools. An OS clock is not a
-        substitute. If this tool is unavailable, stop protected work and report
-        the failure. Preserve the original deadline and reserve closeout time.
+        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for its
+        successful result. Before EVERY INDIVIDUAL shell tool call, make a new
+        authoritative clock call and wait for success. One clock authorizes only
+        the next shell call: do not issue a second shell call without another
+        successful clock, including separate calls inside one functions.exec or
+        parallel batch. Combine related authorized reads in one shell call when
+        useful. Also check before other protected operations. Immediately before
+        returning, call the authoritative clock as your FINAL tool action; after
+        success, use no more tools. An OS clock is not a substitute. If the
+        authoritative tool is unavailable, stop protected work and report the
+        failure. Preserve the original deadline and reserve closeout time.
+
+
+        Estimation output: the governed content model is proposal, regardless of
+        your agent name, class or handler. Return contentOutput.model exactly
+        "proposal", your substantive body, and the supplied estimate frontmatter
+        shape. Contribute only your own estimateRef-bound work. Dependency IDs
+        must refer to actual canonical work items, never draft labels from
+        planning notes; if no canonical predecessor exists yet, state the
+        required ordering in your rationale so the group can link it before
+        approval. Do not copy or invent peer work items or estimates.
   acting:
     handler: actor
     permissions:
@@ -168,13 +186,17 @@ activityProfiles:
 
         Clock tool usage: your FIRST tool action must call
         mcp__treedx__treeseed_time_status through functions.exec with:
-        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for a
-        successful result before shell commands, repository inspection, or other
-        tools. Use this same authoritative clock before protected operations.
-        Immediately before returning, call it as your FINAL tool action; after
-        the successful clock result, use no more tools. An OS clock is not a
-        substitute. If this tool is unavailable, stop protected work and report
-        the failure. Preserve the original deadline and reserve closeout time."
+        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for its
+        successful result. Before EVERY INDIVIDUAL shell tool call, make a new
+        authoritative clock call and wait for success. One clock authorizes only
+        the next shell call: do not issue a second shell call without another
+        successful clock, including separate calls inside one functions.exec or
+        parallel batch. Combine related authorized reads in one shell call when
+        useful. Also check before other protected operations. Immediately before
+        returning, call the authoritative clock as your FINAL tool action; after
+        success, use no more tools. An OS clock is not a substitute. If the
+        authoritative tool is unavailable, stop protected work and report the
+        failure. Preserve the original deadline and reserve closeout time."
     additionalContext:
       - assigned-source-scope
   reviewing:
@@ -211,13 +233,17 @@ activityProfiles:
 
         Clock tool usage: your FIRST tool action must call
         mcp__treedx__treeseed_time_status through functions.exec with:
-        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for a
-        successful result before shell commands, repository inspection, or other
-        tools. Use this same authoritative clock before protected operations.
-        Immediately before returning, call it as your FINAL tool action; after
-        the successful clock result, use no more tools. An OS clock is not a
-        substitute. If this tool is unavailable, stop protected work and report
-        the failure. Preserve the original deadline and reserve closeout time.
+        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for its
+        successful result. Before EVERY INDIVIDUAL shell tool call, make a new
+        authoritative clock call and wait for success. One clock authorizes only
+        the next shell call: do not issue a second shell call without another
+        successful clock, including separate calls inside one functions.exec or
+        parallel batch. Combine related authorized reads in one shell call when
+        useful. Also check before other protected operations. Immediately before
+        returning, call the authoritative clock as your FINAL tool action; after
+        success, use no more tools. An OS clock is not a substitute. If the
+        authoritative tool is unavailable, stop protected work and report the
+        failure. Preserve the original deadline and reserve closeout time.
     additionalContext:
       - review-subject
       - acceptance-criteria
@@ -259,13 +285,17 @@ activityProfiles:
 
         Clock tool usage: your FIRST tool action must call
         mcp__treedx__treeseed_time_status through functions.exec with:
-        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for a
-        successful result before shell commands, repository inspection, or other
-        tools. Use this same authoritative clock before protected operations.
-        Immediately before returning, call it as your FINAL tool action; after
-        the successful clock result, use no more tools. An OS clock is not a
-        substitute. If this tool is unavailable, stop protected work and report
-        the failure. Preserve the original deadline and reserve closeout time.
+        text(await tools.mcp__treedx__treeseed_time_status({}));. Wait for its
+        successful result. Before EVERY INDIVIDUAL shell tool call, make a new
+        authoritative clock call and wait for success. One clock authorizes only
+        the next shell call: do not issue a second shell call without another
+        successful clock, including separate calls inside one functions.exec or
+        parallel batch. Combine related authorized reads in one shell call when
+        useful. Also check before other protected operations. Immediately before
+        returning, call the authoritative clock as your FINAL tool action; after
+        success, use no more tools. An OS clock is not a substitute. If the
+        authoritative tool is unavailable, stop protected work and report the
+        failure. Preserve the original deadline and reserve closeout time.
 ---
 
 Implement accepted API behavior through scoped strict TypeScript changes.
