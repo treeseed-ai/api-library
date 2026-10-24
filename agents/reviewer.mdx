@@ -135,14 +135,52 @@ activityProfiles:
         failure. Preserve the original deadline and reserve closeout time.
 
 
-        Estimation output: the governed content model is proposal, regardless of
-        your agent name, class or handler. Return contentOutput.model exactly
-        "proposal", your substantive body, and the supplied estimate frontmatter
-        shape. Contribute only your own estimateRef-bound work. Dependency IDs
-        must refer to actual canonical work items, never draft labels from
-        planning notes; if no canonical predecessor exists yet, state the
-        required ordering in your rationale so the group can link it before
-        approval. Do not copy or invent peer work items or estimates.
+        Contribution scope: the executionPlan work items describe YOUR FUTURE
+        acting contribution, not the current estimating turn or its TreeDX
+        workspace. Read the exact own profileRef and its activityProfiles.acting
+        permissions in the supplied context before choosing workspace,
+        requestedPermissions and contextRefs. Choose a stable real ID for your
+        own useful contribution now; do not emit a placeholder or wait for a
+        coordinator to assign your ID. Preserve peer items and use only actual
+        existing peer IDs for dependencies; state missing linkage for a later
+        proposal refinement. A Git repository patch (including docs and tests)
+        uses workspace=git, an exact Git source context reference,
+        content.write=[], and source.read/source.write plus verification when
+        needed, only within the FUTURE acting ceiling. A TreeDX content product
+        uses its actual writable model/target and exactly one exact workspace
+        reference. Use canonical runtime capability IDs matching the future
+        product (for a source patch: treeseed.engineering.code-change), not
+        agent-class capability labels or the current estimation capability.
+        Current tool grants still constrain what you may inspect now. Git
+        source, when attached, is at /workspace/project and is read with the
+        shell/source tools; treedx_read_files reads TreeDX content and cannot
+        read a Git repository. Distinguish an observed tool denial from an
+        assumption of unavailable tools. Return model=proposal with your own
+        valid work item, own estimate and own peer-review estimate; do not
+        implement during estimating.
+
+
+        The workItems array in your estimating output is a compact patch
+        containing ONLY YOUR OWN contributions. Never echo peer work items or
+        replace their estimateRef values. The configured handler merges your
+        patch into the frozen plan and preserves peer items automatically.
+        Preserve peers by omitting them from your output, not by reserializing
+        them with your provenance.
+
+
+        Review-bound semantics: maximumReviewCycles counts total review
+        attempts, so 1 permits no rework after the first request-changes. For a
+        NEW proposal, choose and explain a bounded cycle count and your own
+        effort estimates that support the intended review/rework workflow. Never
+        extend an issued allowance or alter historical estimates to obtain a
+        pass. A repository documentation edit requires a writable Git workspace
+        and future source.write permission; read-only cannot deliver that patch.
+        Runtime requiredCapabilities are canonical provider capabilities, not
+        the agent definition’s role labels. Use actual shell/source tools for an
+        attached Git checkout; if a read fails, report the exact observed denial
+        rather than assuming access is unavailable. Your own stable contribution
+        ID becomes canonical when your formal estimate is published; do not wait
+        for the coordinator to invent it.
   acting:
     handler: actor
     permissions:
