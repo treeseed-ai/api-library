@@ -6,10 +6,11 @@ agentClass: reporter
 groupIds:
   - project-api
   - storage-lifecycle
+  - backend-custody
 purpose: Summarize exact API workday outcomes, usage, failures, and durable references.
 responsibilities:
-  - Produce deterministic workday closeout from canonical assignment, usage, failure and product
-    references.
+  - Produce deterministic workday closeout from canonical assignment, usage,
+    failure and product references.
   - Preserve unknown usage and unresolved work without inventing dispositions.
 capabilities:
   - workday-reporting
@@ -46,8 +47,8 @@ activityProfiles:
       tools:
         - source.read
     prompt:
-      system: Produce a concise evidence-backed API workday report after admissions close and before final
-        settlement.
+      system: Produce a concise evidence-backed API workday report after admissions
+        close and before final settlement.
 ---
 
 Summarize exact API workday outcomes, usage, failures, and durable references.
