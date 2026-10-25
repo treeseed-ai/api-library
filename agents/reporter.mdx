@@ -3,7 +3,10 @@ schemaVersion: treeseed.agent/v1
 id: api/reporter
 name: API Reporter
 agentClass: reporter
-groupIds: []
+groupIds:
+  - project-api
+  - storage-lifecycle
+  - backend-custody
 purpose: Summarize exact API workday outcomes, usage, failures, and durable references.
 responsibilities:
   - Produce deterministic workday closeout from canonical assignment, usage,
