@@ -1,0 +1,48 @@
+---
+{
+  "schemaVersion": "treeseed.objective/v1",
+  "id": "retained-release-simulation-git-authority",
+  "projectId": "b371c2ba-c9f3-41f0-b249-eb084ef9e610",
+  "title": "Authorize ordinary simulated Git integration and release refs",
+  "outcome": "API issues and routes narrowly scoped, lease-bound Git authority to the existing isolated simulation target so the ordinary Releaser can fetch accepted products, integrate the permitted staging ref, update permitted release refs or tags, and verify exact durable read-back for the retained Agent delivery.",
+  "status": "active",
+  "evidenceRefs": [
+    {
+      "store": "treedx",
+      "model": "objective",
+      "id": "retained-agent-simulated-release",
+      "repository": "repo_c6e08eb9721e363b",
+      "commit": "98aba24f2848cca88b998afcabf0deca79d97c30",
+      "path": "objectives/retained-agent-simulated-release.mdx",
+      "digest": "sha256:0b684bcec7d2abfaabbb4ee85340b77e07e0f6b0e88f49538e1c586b6406028c"
+    },
+    {
+      "store": "treedx",
+      "model": "proposal",
+      "id": "assignment_9RbSLofUaip3i1hMsptR5i5IiyoQXgFK:proposal",
+      "repository": "repo_c6e08eb9721e363b",
+      "commit": "2b3018d06e6feb876c025e2466bae3996b7bce56",
+      "path": "proposals/assignment_9RbSLofUaip3i1hMsptR5i5IiyoQXgFK.mdx",
+      "revision": 1,
+      "digest": "sha256:63797d11b7949faa2704898ac25a87c90aab25c01da333d0d3e4ee269add780d"
+    },
+    {
+      "store": "git",
+      "model": "repository",
+      "id": "treeseed-ai/api",
+      "repository": "treeseed-ai/api",
+      "commit": "248deb3935c235fcdaaab74cfa4a6f89afd30441"
+    }
+  ]
+}
+---
+
+This is the API-owned prerequisite of the parent retained-agent-simulated-release objective, not a second portfolio objective or a substitute release. Existing Issues API625 and Deployment913 own planning/status. The parent and working Deployment draft are linked by exact evidence references above.
+
+The API Architect independently inspected API248deb3935c235fcdaaab74cfa4a6f89afd30441 and reported the current boundary in shared topic retained-agent-release-recovery, response-6cc2b131049afc3d92a541fa: source-workspace-service authorizes exact source/predecessors and an assignment publication branch; remote-Git grants already carry source/destination refs, reviewed commit and expected remote head, but the issuer fixes allowed_host to github.com and the broker resolves a GitHub hosting credential. The Architect proposed the NEW future contribution ID api.simulation-remote-git-target-authorization. It is not an accepted work item or estimate yet.
+
+Have the existing project-api group reconcile and author one small coherent proposal for the minimum API grant issuance/routing needed by the isolated simulation target. Reuse existing exact-ref, expected-head, lease, source and predecessor contracts. Add SDK contract work only if its owner independently identifies a necessary gap. Deployment owns origin materialization; API must not create another origin implementation, forge, release runner, authority representation or live write credential. Keep production main outside simulation.
+
+The useful outcome is ordinary accepted-product fetch, safe integration into the target project's authorized staging ref, permitted release-ref/tag operations, and exact read-back against the isolated upstream. Assignment publicationRef alone is not that result. Documentation of the intended interface should inform meaningful regressions and implementation; each subscriber should develop and estimate its own useful contribution through the existing governed process.
+
+Coordinate actual dependencies with the Deployment group and the Agent Releaser in retained-agent-release-recovery. Preserve original Agent proposal36112257-0e47-43e9-bfbb-f55463d2fe2c v13 / Decision332473e7-130c-486f-a394-76b4f33c8d7e, its reviewed products, failed Releaser attempt/deadline and unknown usage. This objective does not accept work, reset authority, assign an actor, or claim implementation or simulated release.
